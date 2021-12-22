@@ -1,8 +1,9 @@
 const mongoose = require("mongoose")
 
 const ProductSchema = new mongoose.Schema({
-    title : {
+    name : {
         type:String,
+        required: true,
     },
     desc : {
         type:String
@@ -38,7 +39,8 @@ const ProductSchema = new mongoose.Schema({
                 type : mongoose.Types.ObjectId
             },
             date : {
-                type : Date.now()
+                type : Date,
+                default : Date.now()
             }
         }
         
