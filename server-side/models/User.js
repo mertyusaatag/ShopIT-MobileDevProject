@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      validate: [validator.isEmail, "invalid email"],
+      validate: [validator.isEmail, "Invalid email."],
     },
     accessLevel: {
       type: Number,
@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema(
         autopopulate: { maxDepth: 3 },
       },
     ],
-    adress: [
+    address: [
       {
         type: String,
       },

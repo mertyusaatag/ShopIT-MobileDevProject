@@ -8,7 +8,9 @@ const create = async (req,res) =>
     const usermail = req.body.email;
     const existUser = await UniqueEmail(usermail);
     console.log(existUser);
-    if(existUser) throw new Error("user already exist")
+    if(existUser) {
+      throw new Error("User with that email already exists.")
+    }
     req.body.password = passwordToHash(req.body.password);
     response = await insert(req.body);
     res.status(httpStatus.CREATED).send(response);
@@ -17,7 +19,7 @@ const create = async (req,res) =>
     res.status(httpStatus.BAD_REQUEST).send(error.message)
   }
        
-    }
+}
  
     
 
