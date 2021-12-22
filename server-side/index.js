@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 //const dotenv = require("dotenv").config({ path: "./config/.env" });
 const helmet = require("helmet")
 const config = require("./config/index")
-const {UserRoutes} = require("./routes");
+const {UserRoutes, ProductRoutes} = require("./routes");
 const loaders = require("./loaders");
 const orderRoute = require("./routes/OrderRouter");
 
@@ -23,5 +23,6 @@ app.use("/Order", orderRoute);
 
 app.listen(process.env.PORT, function () {
   console.log("Server is running on port: " + process.env.PORT);
-  app.use("/users",UserRoutes)
+  app.use("/users", UserRoutes)
+  app.use("/products", ProductRoutes)
 });
