@@ -1,5 +1,4 @@
 const Mongoose = require("mongoose");
-
 const db =Mongoose.connection;
 
 db.once("open",() => {
@@ -8,7 +7,7 @@ db.once("open",() => {
 
 const connectDB = async () =>
 {
-    await Mongoose.connect("mongodb+srv://mert37:mert37@shopit.pch5l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" , {
+    await Mongoose.connect(process.env.CONNECTION_URI , {
         useNewUrlParser:true,
         useUnifiedTopology:true,
     })
