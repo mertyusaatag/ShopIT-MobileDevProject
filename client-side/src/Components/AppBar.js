@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -106,6 +107,13 @@ const TopAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <IconButton
+             size="large"
+             aria-label="shopping-cart"
+            color="inherit"
+            >
+            <ShoppingCartIcon />
+          </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src="/static/images/avatar/2.jpg" />
