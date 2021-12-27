@@ -41,16 +41,22 @@ const TopAppBar = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"))
-    if(user.accessLevel !== 0){
+    if(user){
+      if(user.accessLevel !== 0){
         setUserLogged(true) 
         setSettings([{label: 'Profile', route: '/profile'},
                     {label: 'Orders', route: '/orders'},
                     {label: 'Log out', route: '/logout'}])
-    }else{
+      }else{
         setUserLogged(false)
         setSettings([{label: 'Log in', route: '/login'},
                      {label: 'Sign up', route: '/signup'}])
-        const user = {
+      }
+    }else{
+      setUserLogged(false)
+      setSettings([{label: 'Log in', route: '/login'},
+                   {label: 'Sign up', route: '/signup'}])
+      const user = {
           name: "GUEST",
           accessLevel: 0
       }
