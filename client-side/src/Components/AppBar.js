@@ -23,6 +23,7 @@ const TopAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isUserLogged, setUserLogged] = useState(false);
   const [settings, setSettings] = useState([])
+  const [userImg, setImg] = useState(null)
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,6 +48,7 @@ const TopAppBar = () => {
         setSettings([{label: 'Profile', route: '/profile'},
                     {label: 'Orders', route: '/orders'},
                     {label: 'Log out', route: '/logout'}])
+        setImg(user.img)
       }else{
         setUserLogged(false)
         setSettings([{label: 'Log in', route: '/login'},
@@ -137,7 +139,7 @@ const TopAppBar = () => {
             : "" }
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar src="/static/images/avatar/2.jpg" />
+                <Avatar src={userImg === '' ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />
               </IconButton>
             </Tooltip>
             <Menu

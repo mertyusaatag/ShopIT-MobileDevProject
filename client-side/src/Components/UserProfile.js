@@ -34,7 +34,7 @@ function UserProfile() {
             ?   <Paper elevation={3} style={paperStyle}>
                     <Grid container direction="column" >
                         <Typography item variant="h4"><b>User profile.</b></Typography><br/>
-                        <Avatar  alt="Remy Sharp" src="/broken-image.jpg" sx={{ width: 200, height: 200, margin : "auto" }}/><br/>
+                        <Avatar  alt="Profile picture" src={user.img === "" ? "/broken-image.jpg" : `data:;base64,${user.img}`} sx={{ width: 200, height: 200, margin : "auto" }}/><br/>
                         <Paper item elevation = {6} style={{padding:"10px 10px"}} >
                             <Typography variant="h5" align='left'>Name: {user.name}</Typography>
                         </Paper><br/>

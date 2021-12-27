@@ -8,10 +8,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import axios from 'axios';
 
 export default function ChangeProfilePicDialog() {
   const [open, setOpen] = useState(false);
   const [selectedFile, setFile] = useState(null);
+  const [user, setUser] = useState(null)
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,7 +31,23 @@ export default function ChangeProfilePicDialog() {
     e.preventDefault()
     let formData = new FormData()
     formData.append("img", selectedFile)
+    formData.append("email", user.email)
+    axios.post("http://localhost:4000/users/changePhoto", formData, {headers: {"Content-type": "multipart/form-data"}})
+    .then(res => {
+        console.log(res.data)
+        setOpen(false);
+    })
+    .catch(err => {
+        console.log(err.response.data)
+    })
   }
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    if(user.accessLevel!==0){
+        setUser(user)
+    }
+},[])
 
 
   return (
@@ -47,7 +65,7 @@ export default function ChangeProfilePicDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Change photo</Button>
+          <Button onClick={handleSubmit}>Change photo</Button>
         </DialogActions>
       </Dialog>
     </div>

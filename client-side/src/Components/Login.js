@@ -33,7 +33,8 @@ const LogIn = () => {
                 name: res.data.name,
                 email: res.data.email,
                 accessLevel: res.data.accessLevel,
-                token: res.data.tokens.access_token
+                token: res.data.tokens.access_token,
+                img: res.data.img
             }
             localStorage.setItem("user", JSON.stringify(user))
             setUserLogged(true)
