@@ -27,19 +27,34 @@ const LogIn = () => {
             password
         }
         setErrorFlag(false)
+        axios.post("http://localhost:4000/users/loginUser", loggingCrudentials)
+        .then(res =>{
+            const user = {
+                name: res.data.name,
+                email: res.data.email,
+                accessLevel: res.data.accessLevel,
+                token: res.data.tokens.access_token
+            }
+            localStorage.setItem("user", JSON.stringify(user))
+            setUserLogged(true)
+        })
+        .catch(err =>{
+            setErrorFlag(true)
+            setErrorMessage(err.response.data.message)
+        })
     }
 
     useEffect(() => {
-        const loggedUser = JSON.parse(localStorage.getItem('user'));
-        if(loggedUser){
-            setUserLogged(true)
+        const user = JSON.parse(localStorage.getItem("user"))
+        if(user.accessLevel!==0){
+            setUserLogged(true) 
         }
     },[])
 
 
 
 return(
-    <div classname="LogIn">
+    <div className="LogIn">
         <TopAppBar/>
         <Container>
             <Paper elevation={3} style={paperStyle}>

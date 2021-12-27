@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {Container, Paper, Button} from '@mui/material';
@@ -21,6 +21,7 @@ const SignUp = () => {
     const[redirectFlag, setRedirectFlag] = useState(false)
     const[errorMessage, setErrorMessage] = useState('')
     const[errorFlag, setErrorFlag] = useState(false)
+    const[isUserLogged, setUserLogged] = useState(false)
 
     const handleOnClick = (e) => {
         e.preventDefault()
@@ -45,6 +46,12 @@ const SignUp = () => {
         }
     }
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"))
+        if(user.accessLevel!==0){
+            setUserLogged(true) 
+        }
+    },[])
 
 return(
     <div className="SignUp">
@@ -87,6 +94,7 @@ return(
             </Paper>
         </Container>
         {redirectFlag ? <Navigate to="/login"/> : "" }
+        {isUserLogged ? <Navigate to="/homepage"/> : "" }
     </div>
     );
 }
