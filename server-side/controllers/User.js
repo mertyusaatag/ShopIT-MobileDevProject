@@ -1,6 +1,10 @@
 const {insert , list , loginUser , UniqueEmail} = require("../services/User");
 const httpStatus = require("http-status");
-const { passwordToHash } = require("../utils/helper");
+const {
+  passwordToHash,
+  generateAccesToken,
+  generateRefreshToken,
+} = require("../utils/helper");
 
 const create = async (req,res) =>
 {
@@ -20,10 +24,33 @@ const create = async (req,res) =>
   }
        
 }
- 
+const login = (req, res) => {
+  req.body.password = passwordToHash(req.body.password);
+  loginUser(req.body).then((user) => {
+    if (!user) {
+      return res
+        .status(httpStatus.NOT_FOUND)
+        .send({
+          message:
+            "Account Not Found. Please check your account details Or Register.",
+        });
+    }
+
+    user = {
+      ...user.toObject(),
+      tokens: {
+        access_token: generateAccesToken(user),
+        refresh_token: generateRefreshToken(user),
+      },
+    };
+
+    res.status(httpStatus.OK).send(user);
+  });
+}
     
 
 
 module.exports = {
     create,
+    login
 }
