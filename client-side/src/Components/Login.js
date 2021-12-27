@@ -59,7 +59,6 @@ return(
         <Container>
             <Paper elevation={3} style={paperStyle}>
                 <h1>Log in to your account.</h1>
-                <form className="LogInForm" autoComplete="off">
                     <Box
                      component="form"
                      sx={{
@@ -83,7 +82,6 @@ return(
                         Don't have an account? <Link to="/SignUp">Sign up!</Link>
 
                     </Box>
-                </form>
             </Paper>
         </Container>
         {isUserLogged ? <Navigate to="/homepage"/> : ""}
