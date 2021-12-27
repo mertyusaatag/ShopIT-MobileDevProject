@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { Input } from '@mui/material';
@@ -9,7 +10,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 export default function ChangeProfilePicDialog() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedFile, setFile] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -18,6 +20,17 @@ export default function ChangeProfilePicDialog() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    let formData = new FormData()
+    formData.append("img", selectedFile)
+  }
+
 
   return (
     <div>
@@ -30,7 +43,7 @@ export default function ChangeProfilePicDialog() {
           <DialogContentText>
             Choose photo you would want to use as your profile picture.
           </DialogContentText>
-          <Input accept="image/*" id="button-file" type="file" />
+          <Input accept="image/*" id="button-file" type="file" onChange={handleFileChange}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
