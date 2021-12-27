@@ -46,7 +46,7 @@ const LogIn = () => {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
-        if(user){
+        if(user.accessLevel!==0){
             setUserLogged(true) 
         }
     },[])

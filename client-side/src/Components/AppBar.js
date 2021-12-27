@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,18 +11,18 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Products'];
-const loggedInSettings = ['Profile', 'Orders', 'Logout']
-const loggedOutSettings = ['Log in', 'Sign in']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [{label: "Homepage", route: "/homepage"},
+              {label: "Products", route: "/products"},
+              {label: "Categories", route: "/categories"}];
 
 const TopAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [isUserLogged, setUserLogged] = useState(false);
+  const [settings, setSettings] = useState([])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,6 +38,25 @@ const TopAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    if(user.accessLevel !== 0){
+        setUserLogged(true) 
+        setSettings([{label: 'Profile', route: '/profile'},
+                    {label: 'Orders', route: '/orders'},
+                    {label: 'Log out', route: '/logout'}])
+    }else{
+        setUserLogged(false)
+        setSettings([{label: 'Log in', route: '/login'},
+                     {label: 'Sign up', route: '/signup'}])
+        const user = {
+          name: "GUEST",
+          accessLevel: 0
+      }
+      localStorage.setItem("user", JSON.stringify(user))
+    }
+},[])
 
   return (
     <AppBar position="static">
@@ -80,8 +101,8 @@ const TopAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem component={Link} key={page.label} to={page.route} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -96,24 +117,18 @@ const TopAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+                <MenuItem component={Link} key={page.label} to={page.route} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.label}</Typography>
+                </MenuItem>
+              ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton
-             size="large"
-             aria-label="shopping-cart"
-            color="inherit"
-            >
-            <ShoppingCartIcon />
-          </IconButton>
+            {isUserLogged 
+            ? <IconButton size="large" aria-label="shopping-cart" color="inherit">
+                <ShoppingCartIcon />
+              </IconButton>
+            : "" }
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src="/static/images/avatar/2.jpg" />
@@ -136,8 +151,8 @@ const TopAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem component={Link} key={setting.label} to={setting.route} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{setting.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
