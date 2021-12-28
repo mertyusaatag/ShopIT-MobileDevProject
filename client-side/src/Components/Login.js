@@ -7,7 +7,7 @@ import axios from 'axios';
 import TopAppBar from './AppBar';
 import Typography from '@mui/material/Typography';
 import { Link, Navigate } from 'react-router-dom';
-import { SERVER_HOST } from '../config/global_constants';
+import { SERVER_HOST, GUEST_LEVEL } from '../config/global_constants';
 
 const LogIn = () => {
     const paperStyle = {
@@ -48,7 +48,7 @@ const LogIn = () => {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
-        if(user.accessLevel!==0){
+        if(user.accessLevel > GUEST_LEVEL){
             setUserLogged(true) 
         }
     },[])

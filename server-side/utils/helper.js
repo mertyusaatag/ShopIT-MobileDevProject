@@ -7,7 +7,11 @@ const passwordToHash = (password) =>
 }
 
 const generateAccesToken = (user) => {
-    return JWT.sign({name : user.name ,accessLevel : user.accessLevel},process.env.ACCESS_TOKEN_SECRET_KEY,{ expiresIn:"1d"});
+    return JWT.sign({name : user.name ,accessLevel : user.accessLevel},process.env.ACCESS_TOKEN_SECRET_KEY,{algorithm:"HS256", expiresIn:"1d"});
+}
+
+const verifyToken = (token) => {
+    return JWT.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, {algorithm: "HS256"});
 }
 
 const generateRefreshToken = (user) => {
@@ -17,4 +21,5 @@ module.exports = {
     passwordToHash,
     generateAccesToken,
     generateRefreshToken,
+    verifyToken
 }

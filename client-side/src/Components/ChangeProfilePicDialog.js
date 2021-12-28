@@ -37,7 +37,7 @@ export default function ChangeProfilePicDialog() {
     let formData = new FormData()
     formData.append("img", selectedFile)
     formData.append("email", user.email)
-    axios.post(`${SERVER_HOST}/users/changePhoto`, formData, {headers: {"Content-type": "multipart/form-data"}})
+    axios.post(`${SERVER_HOST}/users/changePhoto`, formData, {headers: {"Content-type": "multipart/form-data", "authorization": user.token}})
     .then(res => {
         const localUser = JSON.parse(localStorage.getItem("user"))
         localUser.img = res.data

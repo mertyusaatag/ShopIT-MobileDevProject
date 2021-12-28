@@ -44,7 +44,7 @@ export default function FormDialog() {
           password: currentPassword,
           newPassword: newPassword
         }
-        axios.put(`${SERVER_HOST}/users/changePassword`, data)
+        axios.put(`${SERVER_HOST}/users/changePassword`, data, {headers:{"authorization": user.token}})
         .then(res => {
           console.log(res.data.message)
           setRedirectFlag(true)

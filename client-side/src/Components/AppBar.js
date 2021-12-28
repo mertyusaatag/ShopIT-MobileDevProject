@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { GUEST_LEVEL } from '../config/global_constants';
 
 const pages = [{label: "Homepage", route: "/homepage"},
               {label: "Products", route: "/products"},
@@ -43,7 +44,7 @@ const TopAppBar = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"))
     if(user){
-      if(user.accessLevel !== 0){
+      if(user.accessLevel > GUEST_LEVEL){
         setUserLogged(true) 
         setSettings([{label: 'Profile', route: '/profile'},
                     {label: 'Orders', route: '/orders'},

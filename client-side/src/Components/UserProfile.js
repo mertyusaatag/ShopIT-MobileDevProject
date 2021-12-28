@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import {Grid, Paper, Avatar} from '@mui/material';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import ChangeProfilePicDialog from './ChangeProfilePicDialog';
+import { GUEST_LEVEL } from '../config/global_constants';
 
 function UserProfile() {
 
@@ -19,7 +20,7 @@ function UserProfile() {
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('user'));
-        if(loggedUser.accessLevel !== 0){
+        if(loggedUser.accessLevel > GUEST_LEVEL){
             setUserLogged(true)
             setUser(loggedUser)
         }else{
