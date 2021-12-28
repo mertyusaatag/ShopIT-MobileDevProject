@@ -9,7 +9,7 @@ const list = () =>
    return User.find({});
 }
 
-const loginUser= (loginData) => 
+const loginUser = (loginData) => 
 {
     return User.findOne(loginData);
 }
@@ -18,9 +18,15 @@ const UniqueEmail = (userdata) =>
 {
     return User.findOne({email : userdata })
 }
+
+const updateUser = (filter, update) =>
+{
+    return User.findOneAndUpdate(filter, update, {new: true})
+}
 module.exports = {
     insert,
     list,
     loginUser,
-    UniqueEmail
+    UniqueEmail,
+    updateUser
 }

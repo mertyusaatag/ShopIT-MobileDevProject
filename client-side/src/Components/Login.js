@@ -7,6 +7,7 @@ import axios from 'axios';
 import TopAppBar from './AppBar';
 import Typography from '@mui/material/Typography';
 import { Link, Navigate } from 'react-router-dom';
+import { SERVER_HOST, GUEST_LEVEL } from '../config/global_constants';
 
 const LogIn = () => {
     const paperStyle = {
@@ -27,13 +28,14 @@ const LogIn = () => {
             password
         }
         setErrorFlag(false)
-        axios.post("http://localhost:4000/users/loginUser", loggingCrudentials)
+        axios.post(`${SERVER_HOST}/users/loginUser`, loggingCrudentials)
         .then(res =>{
             const user = {
                 name: res.data.name,
                 email: res.data.email,
                 accessLevel: res.data.accessLevel,
-                token: res.data.tokens.access_token
+                token: res.data.tokens.access_token,
+                img: res.data.img
             }
             localStorage.setItem("user", JSON.stringify(user))
             setUserLogged(true)
@@ -46,7 +48,7 @@ const LogIn = () => {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
-        if(user.accessLevel!==0){
+        if(user.accessLevel > GUEST_LEVEL){
             setUserLogged(true) 
         }
     },[])
@@ -59,7 +61,6 @@ return(
         <Container>
             <Paper elevation={3} style={paperStyle}>
                 <h1>Log in to your account.</h1>
-                <form className="LogInForm" autoComplete="off">
                     <Box
                      component="form"
                      sx={{
@@ -83,7 +84,6 @@ return(
                         Don't have an account? <Link to="/SignUp">Sign up!</Link>
 
                     </Box>
-                </form>
             </Paper>
         </Container>
         {isUserLogged ? <Navigate to="/homepage"/> : ""}
