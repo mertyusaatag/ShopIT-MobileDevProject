@@ -7,6 +7,7 @@ import axios from 'axios';
 import TopAppBar from './AppBar';
 import Typography from '@mui/material/Typography';
 import { Link, Navigate } from 'react-router-dom';
+import { SERVER_HOST } from '../config/global_constants';
 
 const LogIn = () => {
     const paperStyle = {
@@ -27,7 +28,7 @@ const LogIn = () => {
             password
         }
         setErrorFlag(false)
-        axios.post("http://localhost:4000/users/loginUser", loggingCrudentials)
+        axios.post(`${SERVER_HOST}/users/loginUser`, loggingCrudentials)
         .then(res =>{
             const user = {
                 name: res.data.name,

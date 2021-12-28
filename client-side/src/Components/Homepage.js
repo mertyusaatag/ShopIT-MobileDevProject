@@ -3,7 +3,7 @@ import TopAppBar from './AppBar';
 
 const Homepage = () => {
     return(
-        <div classname="Homepage">
+        <div className="Homepage">
             <TopAppBar/>
             <h1>HomePage</h1>
         </div>

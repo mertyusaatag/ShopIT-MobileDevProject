@@ -7,6 +7,7 @@ import axios from 'axios';
 import TopAppBar from './AppBar';
 import Typography from '@mui/material/Typography';
 import { Link, Navigate } from 'react-router-dom';
+import { SERVER_HOST } from '../config/global_constants';
 
 const SignUp = () => {
     const paperStyle = {
@@ -35,7 +36,7 @@ const SignUp = () => {
             setErrorFlag(true)
             setErrorMessage("Passwords don't match")
         }else{
-            axios.post(`http://localhost:4000/users/addUser`, user)
+            axios.post(`${SERVER_HOST}/users/addUser`, user)
             .then(response =>{
                 setRedirectFlag(true)
             })

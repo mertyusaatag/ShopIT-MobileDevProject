@@ -2,18 +2,22 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import { Input } from '@mui/material';
+import { Input, Typography } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import axios from 'axios';
+import { SERVER_HOST } from '../config/global_constants';
 
 export default function ChangeProfilePicDialog() {
   const [open, setOpen] = useState(false);
   const [selectedFile, setFile] = useState(null);
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('')
+  const [errorFlag, setErrorFlag] = useState(false);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,16 +33,21 @@ export default function ChangeProfilePicDialog() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setErrorFlag(false)
     let formData = new FormData()
     formData.append("img", selectedFile)
     formData.append("email", user.email)
-    axios.post("http://localhost:4000/users/changePhoto", formData, {headers: {"Content-type": "multipart/form-data"}})
+    axios.post(`${SERVER_HOST}/users/changePhoto`, formData, {headers: {"Content-type": "multipart/form-data"}})
     .then(res => {
-        console.log(res.data)
-        setOpen(false);
+        const localUser = JSON.parse(localStorage.getItem("user"))
+        localUser.img = res.data
+        localStorage.setItem("user", JSON.stringify(localUser))
+        window.location.reload()
+        setOpen(false)
     })
     .catch(err => {
-        console.log(err.response.data)
+        setErrorFlag(true)
+        setErrorMessage(err.response.data.message)
     })
   }
 
@@ -62,6 +71,7 @@ export default function ChangeProfilePicDialog() {
             Choose photo you would want to use as your profile picture.
           </DialogContentText>
           <Input accept="image/*" id="button-file" type="file" onChange={handleFileChange}/>
+          {errorFlag ? <Typography color="red">{errorMessage}</Typography> : ""}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
