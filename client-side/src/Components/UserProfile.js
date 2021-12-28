@@ -2,7 +2,7 @@ import React from 'react';
 import TopAppBar from './AppBar';
 import {useEffect, useState} from 'react'
 import Typography from '@mui/material/Typography';
-import {Grid, Paper, Avatar, Button} from '@mui/material';
+import {Grid, Paper, Avatar} from '@mui/material';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import ChangeProfilePicDialog from './ChangeProfilePicDialog';
 
@@ -34,7 +34,7 @@ function UserProfile() {
             ?   <Paper elevation={3} style={paperStyle}>
                     <Grid container direction="column" >
                         <Typography item variant="h4"><b>User profile.</b></Typography><br/>
-                        <Avatar  alt="Profile picture" src={user.img === "" ? "/broken-image.jpg" : `data:;base64,${user.img}`} sx={{ width: 200, height: 200, margin : "auto" }}/><br/>
+                        <Avatar  alt="Profile picture" src={!user.img ? "/broken-image.jpg" : `data:;base64,${user.img}`} sx={{ width: 200, height: 200, margin : "auto" }}/><br/>
                         <Paper item elevation = {6} style={{padding:"10px 10px"}} >
                             <Typography variant="h5" align='left'>Name: {user.name}</Typography>
                         </Paper><br/>

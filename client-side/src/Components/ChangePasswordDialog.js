@@ -10,6 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import { SERVER_HOST } from '../config/global_constants';
 
 export default function FormDialog() {
   const [open, setOpen] = useState(false);
@@ -31,14 +32,28 @@ export default function FormDialog() {
 
   const handlePasswordChange = () => {
       setErrorFlag(false)
-      if(!newPassword === confirmNewPasword){
+      if(newPassword !== confirmNewPasword){
         setErrorFlag(true)
-        setErrorMessage("Passwords doesn't match")
+        setErrorMessage("Passwords don't match")
       }else if(newPassword === currentPassword){
         setErrorFlag(true)
         setErrorMessage("New password can't be identical to current one.")
-      } else{
-
+      }else{
+        const data = {
+          email: user.email,
+          password: currentPassword,
+          newPassword: newPassword
+        }
+        axios.put(`${SERVER_HOST}/users/changePassword`, data)
+        .then(res => {
+          console.log(res.data.message)
+          setRedirectFlag(true)
+          setOpen(false)
+        })
+        .catch(err => {
+          setErrorFlag(true)
+          setErrorMessage(err.response.data.message)
+        })
       }
   }
 

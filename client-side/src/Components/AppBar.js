@@ -139,7 +139,7 @@ const TopAppBar = () => {
             : "" }
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar src={userImg === '' ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />
+                <Avatar src={!userImg ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />
               </IconButton>
             </Tooltip>
             <Menu

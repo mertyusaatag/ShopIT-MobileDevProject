@@ -89,11 +89,35 @@ const changeImg = async (req, res) => {
     }
   }
 }
+
+const changePassword = async (req, res) => {
+  const user = await UniqueEmail(req.body.email)
+  if (!user) {
+    return res
+      .status(httpStatus.NOT_FOUND)
+      .send({
+        message:
+          "Account Not Found",
+      });
+  }else if(user.password !== passwordToHash(req.body.password)){
+    return res
+    .status(httpStatus.UNAUTHORIZED)
+    .send({
+      message:
+        "Incorrect password",
+    });
+  }else{
+    user.password = passwordToHash(req.body.newPassword)
+    await updateUser({email: req.body.email}, user)
+    res.status(httpStatus.OK).send({message: `Password changed`});
+  }
+}
     
 
 
 module.exports = {
     create,
     login,
-    changeImg
+    changeImg,
+    changePassword
 }
