@@ -38,7 +38,7 @@ const login = (req, res) => {
         });
     }
 
-    fs.readFile(`./uploads/${user.img}`, `base64`, (err, fileData) =>{
+    fs.readFile(`./uploads/profiles/${user.img}`, `base64`, (err, fileData) =>{
       user.img = fileData
       user = {
         ...user.toObject(),
@@ -73,18 +73,18 @@ const changeImg = async (req, res) => {
           }
           )
       }else if (req.file.mimetype !== "image/png" && req.file.mimetype !== "image/jpg" && req.file.mimetype !== "image/jpeg"){
-        fs.unlink(`./uploads/${req.file.filename}`, (err) => {
+        fs.unlink(`./uploads/profiles/${req.file.filename}`, (err) => {
           res.status(BAD_REQUEST).send({message: `Only .png, .jpg and .jpeg format accepted`})
         })
       }else{
         const fileName = req.file.filename
         if(user.img !== ''){
-          fs.unlinkSync(`./uploads/${user.img}`)
+          fs.unlinkSync(`./uploads/profiles/${user.img}`)
           user.img = ''
         }
         user.img = fileName
         response = await updateUser({email: req.body.email}, user)
-        fs.readFile(`./uploads/${user.img}`, `base64`, (err, fileData) =>{
+        fs.readFile(`./uploads/profiles/${user.img}`, `base64`, (err, fileData) =>{
           res.status(httpStatus.OK).send(fileData)
         })
       }

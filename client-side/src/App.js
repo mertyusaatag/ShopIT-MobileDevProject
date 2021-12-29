@@ -5,6 +5,7 @@ import SignUp from './Components/SignUp';
 import LogIn from './Components/Login';
 import LogOut from './Components/LogOut';
 import UserProfile from './Components/UserProfile';
+import AddProductForm from './Components/AddProductForm';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/login" element={<LogIn/>} />
           <Route exact path="/logout" element={<LogOut/>} />
           <Route exact path="/profile" element={<UserProfile/>} />
+          <Route exact path="/addproduct" element={<AddProductForm/>} />
         </Routes>
       </Router>
     </div>
