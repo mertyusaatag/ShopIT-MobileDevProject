@@ -6,25 +6,29 @@ const addProduct = (ProductData) => {
 }
 
 const listAllProducts = () => {
-   return Product.find({});
+    return Product.find({});
 }
 
-const findProductByID = (productID) =>{
+const findProductByID = (productID) => {
     return Product.findById(productID)
 }
 
-const deleteProductByID = (productID) =>{
+const deleteProductByID = (productID) => {
     Product.findByIdAndDelete(productID, function (err) {
-        if(err){
+        if (err) {
             console.log(err)
-        }else{
+        } else {
             console.log(`Product ${productID} deleted.`)
         }
     })
 }
 
 const findProductByName = (productName) => {
-    return Product.findOne({name: productName})
+    return Product.findOne({ name: productName })
+}
+
+const updateProduct = (filter, update) => {
+    return Product.findOneAndUpdate(filter, update, { new: true })
 }
 
 module.exports = {
@@ -32,5 +36,6 @@ module.exports = {
     listAllProducts,
     findProductByID,
     findProductByName,
-    deleteProductByID
+    deleteProductByID,
+    updateProduct
 }

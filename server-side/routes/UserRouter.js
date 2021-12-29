@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const upload = multer({dest: `./uploads`})
+const upload = multer({dest: `./uploads/profiles`})
 const {create, login, changeImg, changePassword} = require("../controllers/User")
 
 const router = express.Router();
