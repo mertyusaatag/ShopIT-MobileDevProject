@@ -132,6 +132,37 @@ const changePassword = async (req, res) => {
   }
 
 }
+
+const getUserByEmail = async (req, res) =>{
+  email = req.param('email')
+  
+  const auth = verifyToken(req.headers.authorization)
+  if(auth.accessLevel > process.env.ACCESS_LEVEL_GUEST){
+    const user = await UniqueEmail(email)
+    console.log(user._id)
+      if(!user) {
+       return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+          message: "Account Not Found"
+        });
+     }
+      else{
+       res.status(httpStatus.OK).send(user)
+     
+      }
+    }
+
+    else{
+      return res
+    .status(httpStatus.UNAUTHORIZED)
+    .send({
+      message:
+        "User is not logged in",
+    });
+    }
+  }
+
     
 
 
@@ -139,5 +170,6 @@ module.exports = {
     create,
     login,
     changeImg,
-    changePassword
+    changePassword,
+    getUserByEmail
 }

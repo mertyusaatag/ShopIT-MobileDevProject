@@ -105,7 +105,8 @@ const getAll = async (req, res) => {
 
 const getOneByID = async (req, res) => {
     try {
-        product = await findProductByID(req.params.id)
+        id = req.param('id')
+        product = await findProductByID(id)
         res.status(httpStatus.OK).send(product)
     } catch (error) {
         res.status(httpStatus.BAD_REQUEST).send(error.message)

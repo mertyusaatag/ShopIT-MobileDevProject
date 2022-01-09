@@ -1,39 +1,38 @@
-const orderModel = require("../models/Order");
+const Order = require("../models/Order");
 
 //ADD ORDER
 const createNewOrder = (orderData) =>      
 {
-    const order = new orderModel(orderData);
+    const order = new Order(orderData);
     return order.save();
 }
 
 
 //GET ALL USER ORDERS
-const getUserOrders = (req, res) =>
+const getUserOrders = (userData) =>
 {
-    orderModel.find({ userId: req.params.userId }, (error,data) =>  
-    {
-        res.json(data)
-    })
+    //console.log(Order.find({userId: userData}))
+    return Order.find({userId: `${userData}`});
 }
 
 //DELETE ORDER
-const deleteOrder = (req, res) =>
+const deleteOrder = (orderId) =>
 {
-    orderModel.findByIdAndDelete(req.params.id, (error,data) =>
-    {
-        res.json(data)
-    } )
+   Order.findOneAndDelete(orderId, function (err) {
+    if (err) {
+        console.log(err)
+    } 
+    else {
+        console.log(`Order ${orderId} deleted.`)
+    }
+   })
 }
 
 
 //GET ALL ORDERS
-const getAllOrders = (req, res) =>
+const getAllOrders = () =>
 {
-    orderModel.find((error, data) =>
-    {
-        res.json(data)
-    })
+    return Order.find({});
 }
 
 module.exports = {
