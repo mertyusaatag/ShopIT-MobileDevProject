@@ -183,21 +183,21 @@ const deleteAll = async (req, res) => {
   } else {
     let admin = await UniqueEmail(process.env.ADMIN_EMAIL)
     fs.readdir(`./uploads/profiles`, (err, files) => {
-      if(err){
+      if (err) {
         return res
-        .status(httpStatus.BAD_REQUEST)
-        .send("Something went wrong")
+          .status(httpStatus.BAD_REQUEST)
+          .send("Something went wrong")
       }
-      for(const file of files){
-        if(file !== admin.img){
+      for (const file of files) {
+        if (file !== admin.img) {
           fs.unlinkSync(`./uploads/profiles/${file}`)
         }
       }
     })
     await deleteUsers()
     return res
-    .status(httpStatus.OK)
-    .send("Users cleared")
+      .status(httpStatus.OK)
+      .send("Users cleared")
   }
 }
 

@@ -5,6 +5,7 @@ import { Paper, Grid, Typography, Button } from '@mui/material'
 import { SERVER_HOST, ADMIN_LEVEL } from '../config/global_constants';
 import TopAppBar from './AppBar';
 import UsersTable from './UsersTable'
+import ProductsTable from './ProductsTable'
 import axios from 'axios'
 
 const paperStyle = {
@@ -26,11 +27,7 @@ const AdminPanel = () => {
 
     const productsHandleOnClick = (e) => {
         e.preventDefault()
-    }
-
-    const usersHandleOnClick = (e) => {
-        e.preventDefault()
-        axios.delete(`${SERVER_HOST}/users/deleteAll`, { headers: { 'authorization': admin.token }})
+        axios.delete(`${SERVER_HOST}/products/deleteAll`, { headers: { 'authorization': admin.token } })
         .then(res => {
             console.log(res.data)
             window.location.reload()
@@ -40,12 +37,24 @@ const AdminPanel = () => {
         })
     }
 
+    const usersHandleOnClick = (e) => {
+        e.preventDefault()
+        axios.delete(`${SERVER_HOST}/users/deleteAll`, { headers: { 'authorization': admin.token } })
+            .then(res => {
+                console.log(res.data)
+                window.location.reload()
+            })
+            .catch(err => {
+                console.log(err.response.data.message)
+            })
+    }
+
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
         if (user.accessLevel < ADMIN_LEVEL) {
             setAdminFlag(false)
-        }else{
+        } else {
             setAdminFlag(true)
             setAdmin(user)
         }
@@ -61,17 +70,18 @@ const AdminPanel = () => {
                         <Grid container spacing={2} sx={{ m: 'auto' }} alignItems="stretch" justifyContent="center" direction="row">
                             <Paper elevation={6} style={paperStyleSmall}>
                                 <Typography item variant="h5">Products.</Typography><br />
-                                <Button variant="contained" component={Link} to="/addcocktail">
+                                <ProductsTable /><br />
+                                <Button variant="contained" component={Link} to="/addproduct">
                                     Add product
-                                </Button> 
-                                <Button variant="contained" color="error" onClick={productsHandleOnClick}> 
+                                </Button>
+                                <Button variant="contained" color="error" onClick={productsHandleOnClick}>
                                     Clear data
                                 </Button>
                             </Paper>
                             <Paper elevation={6} style={paperStyleSmall}>
                                 <Typography item variant="h5">Users.</Typography><br />
-                                <UsersTable /><br/>
-                                <Button variant="contained" color="error" onClick={usersHandleOnClick}> 
+                                <UsersTable /><br />
+                                <Button variant="contained" color="error" onClick={usersHandleOnClick}>
                                     Clear data
                                 </Button>
                             </Paper>
