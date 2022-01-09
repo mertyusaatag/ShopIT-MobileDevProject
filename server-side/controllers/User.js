@@ -132,83 +132,115 @@ const changePassword = async (req, res) => {
 
 }
 
-const getAllUsers = async (req, res) => {
+const getUserByEmail = async (req, res) =>{
+  email = req.param('email')
+  
   const auth = verifyToken(req.headers.authorization)
-  if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
-    return res
-      .status(httpStatus.UNAUTHORIZED)
-      .send({
-        message:
-          "You don't have access to this feature.",
-      });
-  } else {
-    users = await getAll()
-    return res
-      .status(httpStatus.OK)
-      .send(users)
-  }
-}
-
-const deleteUserById = async (req, res) => {
-  const auth = verifyToken(req.headers.authorization)
-  if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
-    return res
-      .status(httpStatus.UNAUTHORIZED)
-      .send({
-        message:
-          "You don't have access to this feature.",
-      });
-  } else {
-    id = req.params.id
-    user = await getOne(id)
-    if (user.img !== '') {
-      fs.unlinkSync(`./uploads/profiles/${user.img}`)
+  if(auth.accessLevel > process.env.ACCESS_LEVEL_GUEST){
+    const user = await UniqueEmail(email)
+    console.log(user._id)
+      if(!user) {
+       return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+          message: "Account Not Found"
+        });
+     }
+      else{
+       res.status(httpStatus.OK).send(user)
+     
+      }
     }
-    await deleteUser(id)
-    return res
-      .status(httpStatus.OK)
-      .send("User deleted")
-  }
-}
 
-const deleteAll = async (req, res) => {
-  const auth = verifyToken(req.headers.authorization)
-  if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
-    return res
-      .status(httpStatus.UNAUTHORIZED)
-      .send({
-        message:
-          "You don't have access to this feature.",
-      });
-  } else {
-    let admin = await UniqueEmail(process.env.ADMIN_EMAIL)
-    fs.readdir(`./uploads/profiles`, (err, files) => {
-      if (err) {
-        return res
-          .status(httpStatus.BAD_REQUEST)
-          .send("Something went wrong")
+    else{
+      return res
+    .status(httpStatus.UNAUTHORIZED)
+    .send({
+      message:
+        "User is not logged in",
+    });
+    }
+  }
+
+
+  const getAllUsers = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+      return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+          message:
+            "You don't have access to this feature.",
+        });
+    } else {
+      users = await getAll()
+      return res
+        .status(httpStatus.OK)
+        .send(users)
+    }
+  }
+  
+  const deleteUserById = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+      return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+          message:
+            "You don't have access to this feature.",
+        });
+    } else {
+      id = req.params.id
+      user = await getOne(id)
+      if (user.img !== '') {
+        fs.unlinkSync(`./uploads/profiles/${user.img}`)
       }
-      for (const file of files) {
-        if (file !== admin.img) {
-          fs.unlinkSync(`./uploads/profiles/${file}`)
+      await deleteUser(id)
+      return res
+        .status(httpStatus.OK)
+        .send("User deleted")
+    }
+  }
+  
+  const deleteAll = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+      return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+          message:
+            "You don't have access to this feature.",
+        });
+    } else {
+      let admin = await UniqueEmail(process.env.ADMIN_EMAIL)
+      fs.readdir(`./uploads/profiles`, (err, files) => {
+        if (err) {
+          return res
+            .status(httpStatus.BAD_REQUEST)
+            .send("Something went wrong")
         }
-      }
-    })
-    await deleteUsers()
-    return res
-      .status(httpStatus.OK)
-      .send("Users cleared")
+        for (const file of files) {
+          if (file !== admin.img) {
+            fs.unlinkSync(`./uploads/profiles/${file}`)
+          }
+        }
+      })
+      await deleteUsers()
+      return res
+        .status(httpStatus.OK)
+        .send("Users cleared")
+    }
   }
-}
+  
+    
 
 
-
-module.exports = {
-  create,
-  login,
-  changeImg,
-  changePassword,
-  getAllUsers,
-  deleteUserById,
-  deleteAll
-}
+  module.exports = {
+    create,
+    login,
+    changeImg,
+    changePassword,
+    getAllUsers,
+    deleteUserById,
+    deleteAll
+  }

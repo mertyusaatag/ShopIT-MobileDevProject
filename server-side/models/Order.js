@@ -10,12 +10,12 @@ const OrderSchema = new mongoose.Schema(
         },
         products : 
         [
-           { productId: [
+           { productId: 
                 {
                     type : mongoose.Types.ObjectId,
                     ref:"Product",
                     autopopulate: { maxDepth: 3 }
-                }],
+                },
             quantity : {
                 type:Number,
                 default:1

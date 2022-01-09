@@ -123,26 +123,28 @@ const getAll = async (req, res) => {
 }
 
 const getOneByID = async (req, res) => {
-    const auth = verifyToken(req.headers.authorization)
-    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
-        return res
-            .status(httpStatus.UNAUTHORIZED)
-            .send({
-                message:
-                    "You don't have access to this feature.",
-            });
-    } else {
-        product = await findProductByID(req.params.id)
-        const productImg = product.img.map((img) => {
-            let files = []
-            file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
-            files.push(file)
-            return files
-        })
-        product.img = productImg
-        return res
-            .status(httpStatus.OK)
-            .send(product)
+
+const auth = verifyToken(req.headers.authorization)
+if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+    return res
+        .status(httpStatus.UNAUTHORIZED)
+        .send({
+            message:
+                "You don't have access to this feature.",
+        });
+} else {
+    product = await findProductByID(req.params.id)
+    const productImg = product.img.map((img) => {
+        let files = []
+        file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
+        files.push(file)
+        return files
+    })
+    product.img = productImg
+    return res
+        .status(httpStatus.OK)
+        .send(product)
+
     }
 }
 const deleteOne = async (req, res) => {

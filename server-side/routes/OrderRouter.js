@@ -1,17 +1,14 @@
 const express = require("express");
-const { getUserOrders, deleteOrder, createNewOrder } = require("../services/Order");
+const { userOrders,addOrder } = require("../controllers/Order")
 
 
 const router = express.Router();
 
 // get all user orders
-router.get(`/:userId`,getUserOrders)
-
-//delete order
-router.delete(`/:id`, deleteOrder)
+router.get(`/userOrders/:userId`, userOrders)
 
 //add order
-router.post(`/`, createNewOrder)
+router.post(`/addOrder`, addOrder)
 
 
 
