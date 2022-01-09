@@ -2,13 +2,14 @@ import React from 'react';
 import {
     Button, Paper, Container, Box,
     TextField, MenuItem, InputLabel, Select,
-    OutlinedInput, Chip, InputAdornment, Typography
+    OutlinedInput, Chip, InputAdornment, Typography,
+    ImageList
 } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios'
-import { SERVER_HOST, GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
+import { SERVER_HOST, ADMIN_LEVEL } from '../config/global_constants';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,30 +22,32 @@ const MenuProps = {
     },
 };
 
+const imageStyle = {
+    display: 'block',
+    margin: 'auto',
+    width: 150,
+    height: 150,
+}
+
 const categories = ['Laptop', 'PC Hardware', 'Monitor', 'Keyboard', 'Mouse', 'Headphones', 'GPU', 'CPU', 'RAM', 'Motherboard']
 const colors = ['white', 'black', 'red', 'blue', 'green', 'yellow', 'purple', 'orange']
 
-const AddProductForm = () => {
+const EditProductForm = () => {
     const paperStyle = {
         padding: "50px 20px",
         width: 600,
         margin: "20px auto",
     }
 
+    const { id } = useParams()
     const theme = useTheme()
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [productCategory, setCategory] = useState([])
-    const [productColor, setColor] = useState([])
-    const [price, setPrice] = useState(null)
-    const [quantity, setQuantity] = useState(null)
     const [files, setFiles] = useState([])
-    const [inStock, setInStock] = useState(false)
     const [user, setUser] = useState(null)
     const [adminLogged, setAdminLogged] = useState(false)
     const [errorFlag, setErrorFlag] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [successFlag, setSuccessFlag] = useState(false)
+    const [product, setProduct] = useState(null)
 
     const getStyles = (cat, category, theme) => {
         return {
@@ -60,14 +63,6 @@ const AddProductForm = () => {
         setFiles(e.target.files)
     }
 
-    const clearInputs = () => {
-        setName("")
-        setCategory([])
-        setColor([])
-        setPrice(0)
-        setQuantity(0)
-        setDescription('')
-    }
 
     const handleOnClick = (e) => {
         e.preventDefault()
@@ -77,43 +72,48 @@ const AddProductForm = () => {
         if (user.accessLevel < ADMIN_LEVEL) {
             setErrorFlag(true)
             setErrorMessage("You don't have permission to use this feature")
-        } else if (files.length === 0) {
+        } else if (files.length <= 0 && product.img.length === 0) {
             setErrorFlag(true)
             setErrorMessage("No files were selected")
-        } else if (files.length > 4) {
+        } else if (files.length >= 4) {
             setErrorFlag(true)
             setErrorMessage("Too many files. Choose a maximum of 4 files")
+        } else if (files.length > 0 && product.img.length !== 0) {
+            setErrorFlag(true)
+            setErrorMessage("Clear previous images before adding new ones.")
         } else {
-            if (quantity > 0) {
-                setInStock(true)
+            if (product.quantity > 0) {
+                setProduct(prevState => ({
+                    ...prevState,
+                    inStock: true
+                }))
             } else {
-                setInStock(false)
+                setProduct(prevState => ({
+                    ...prevState,
+                    inStock: true
+                }))
             }
-            const product = {
-                name: name,
-                desc: description,
-                categories: productCategory,
-                color: productColor,
-                price: price,
-                quantity: quantity,
-                inStock: inStock
-            }
-            axios.post(`${SERVER_HOST}/products/addProduct`, product, { headers: { "authorization": user.token } })
+            axios.put(`${SERVER_HOST}/products/update`, product, { headers: { "authorization": user.token } })
                 .then(res => {
-                    let formData = new FormData()
-                    for (const key of Object.keys(files)) {
-                        formData.append('img', files[key])
+                    if (files.length > 0) {
+                        let formData = new FormData()
+                        for (const key of Object.keys(files)) {
+                            formData.append('img', files[key])
+                        }
+                        formData.append('name', product.name)
+                        axios.put(`${SERVER_HOST}/products/addImages`, formData, { headers: { "Content-type": "multipart/form-data", "authorization": user.token } })
+                            .then(res => {
+                                setSuccessFlag(true)
+                                window.location.reload()
+                            })
+                            .catch(err => {
+                                setErrorFlag(true)
+                                setErrorMessage(err.response.data.message)
+                            })
+                    } else {
+                        setSuccessFlag(true)
+                        window.location.reload()
                     }
-                    formData.append('name', name)
-                    axios.put(`${SERVER_HOST}/products/addImages`, formData, { headers: { "Content-type": "multipart/form-data", "authorization": user.token } })
-                        .then(res => {
-                            setSuccessFlag(true)
-                            clearInputs()
-                        })
-                        .catch(err => {
-                            setErrorFlag(true)
-                            setErrorMessage(err.response.data.message)
-                        })
                 })
                 .catch(err => {
                     setErrorFlag(true)
@@ -121,23 +121,46 @@ const AddProductForm = () => {
                 })
         }
     }
+    const handleImageClear = (e) => {
+        e.preventDefault()
+        axios.delete(`${SERVER_HOST}/products/clearImages/${id}`, { headers: { "authorization": user.token } })
+            .then(res => {
+                console.log(res.data)
+                setProduct(prevState => ({
+                    ...prevState,
+                    img: []
+                }))
+            })
+            .catch(err => {
+                setErrorFlag(true)
+                setErrorMessage(err.response.data.message)
+            })
+    }
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('user'));
         if (loggedUser.accessLevel >= ADMIN_LEVEL) {
             setAdminLogged(true)
             setUser(loggedUser)
+            axios.get(`${SERVER_HOST}/products/getProduct/${id}`, { headers: { "authorization": loggedUser.token } })
+                .then(res => {
+                    setProduct(res.data)
+                })
+                .catch(err => {
+                    setErrorFlag(true)
+                    setErrorMessage(err.response.data.message)
+                })
         } else {
             setAdminLogged(false)
         }
-    }, [])
+    }, [id])
 
     return (
-        <div className="addProductForm">
+        <div className="editProductForm">
             {adminLogged
                 ? <Container>
                     <Paper elevation={3} style={paperStyle}>
-                        <h1>Add new product.</h1>
+                        <h1>Edit product: {id}</h1>
                         <Box
                             component="form"
                             sx={{
@@ -147,20 +170,24 @@ const AddProductForm = () => {
                             autoComplete="off"
                         >
                             <TextField label="Product name" variant="outlined"
-                                value={name}
+                                value={product ? product.name : ""}
                                 onChange={(e) => {
-                                    setName(e.target.value)
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        name: e.target.value
+                                    }))
                                 }} /><br />
                             <InputLabel id="multiple-category-label">Categories</InputLabel>
                             <Select
                                 labelId="multiple-category-label"
                                 id="multiple-category"
                                 multiple
-                                value={productCategory}
+                                value={product ? product.categories : []}
                                 onChange={(e) => {
-                                    setCategory(
-                                        typeof e.target.value === "string" ? e.target.value.split(',') : e.target.value,
-                                    )
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        categories: typeof e.target.value === "string" ? e.target.value.split(',') : e.target.value
+                                    }))
                                 }}
                                 input={<OutlinedInput value="" id="select-multiple" label="Categories" />}
                                 renderValue={(selected) => (
@@ -175,7 +202,7 @@ const AddProductForm = () => {
                                     <MenuItem
                                         key={cat}
                                         value={cat}
-                                        style={getStyles(cat, productCategory, theme)}
+                                        style={getStyles(cat, product ? product.categories : [], theme)}
                                     >
                                         {cat}
                                     </MenuItem>
@@ -186,11 +213,12 @@ const AddProductForm = () => {
                                 labelId="multiple-colors-label"
                                 id="multiple-colors"
                                 multiple
-                                value={productColor}
+                                value={product ? product.color : []}
                                 onChange={(e) => {
-                                    setColor(
-                                        typeof e.target.value === "string" ? e.target.value.split(',') : e.target.value,
-                                    )
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        color: typeof e.target.value === "string" ? e.target.value.split(',') : e.target.value
+                                    }))
                                 }}
                                 input={<OutlinedInput id="select-multiple" label="Colors" />}
                                 renderValue={(selected) => (
@@ -205,39 +233,57 @@ const AddProductForm = () => {
                                     <MenuItem
                                         key={color}
                                         value={color}
-                                        style={getStyles(color, productColor, theme)}
+                                        style={getStyles(color, product ? product.color : [], theme)}
                                     >
                                         {color}
                                     </MenuItem>
                                 ))}
                             </Select>
                             <TextField label="Price" variant="outlined"
-                                value={price}
+                                value={product ? product.price : ""}
                                 type="number"
                                 onChange={(e) => {
-                                    setPrice(e.target.value)
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        price: e.target.value
+                                    }))
                                 }}
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                 }} /><br />
                             <TextField label="Quantity" variant="outlined"
-                                value={quantity}
+                                value={product ? product.quantity : ""}
                                 type="number"
                                 onChange={(e) => {
-                                    setQuantity(e.target.value)
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        quantity: e.target.value
+                                    }))
                                 }} /><br />
                             <TextField label="Description" variant="outlined"
                                 multiline
                                 rows={4}
-                                value={description}
+                                value={product ? product.desc : ""}
                                 onChange={(e) => {
-                                    setDescription(e.target.value)
+                                    setProduct(prevState => ({
+                                        ...prevState,
+                                        desc: e.target.value
+                                    }))
                                 }} /><br />
                             <InputLabel id="multiple-category-label">Images (max 4)</InputLabel>
+                            <Button disabled={product ? product.img.length === 0 ? true : false : false}
+                                variant="contained" onClick={handleImageClear}>Clear images</Button><br />
+                            <ImageList cols={2}>
+                                {product
+                                    ? product.img.map((photo) => (
+                                        <img src={`data:;base64,${photo}`} alt={`product_photo`} style={imageStyle} />
+                                    ))
+                                    : ""}
+                            </ImageList>
                             <input accept="image/*" id="file-upload" type="file" onChange={handleOnFileChange} multiple /><br />
                             {errorFlag ? <Typography color="red">{errorMessage}</Typography> : ""}
-                            <Button variant="contained" onClick={handleOnClick}>Add product</Button><br />
-                            {successFlag ? <Typography color="green">Product successfully added.</Typography> : ""}
+                            <Button variant="contained" onClick={handleOnClick}>Edit product</Button><br />
+                            {successFlag ? <Typography color="green">Product successfully updated.</Typography> : ""}
                             <Button variant="contained" component={Link} to="/admin">Back</Button><br />
                         </Box>
                     </Paper>
@@ -248,4 +294,4 @@ const AddProductForm = () => {
     )
 }
 
-export default AddProductForm;
+export default EditProductForm;

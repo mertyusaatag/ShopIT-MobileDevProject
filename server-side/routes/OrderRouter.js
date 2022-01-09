@@ -7,9 +7,6 @@ const router = express.Router();
 // get all user orders
 router.get(`/userOrders/:userId`, userOrders)
 
-//delete order
-//router.delete(`/:id`, deleteOrder)
-
 //add order
 router.post(`/addOrder`, addOrder)
 

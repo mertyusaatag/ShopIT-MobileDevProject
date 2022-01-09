@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { GUEST_LEVEL } from '../config/global_constants';
+import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
 
 const pages = [{label: "Homepage", route: "/homepage"},
               {label: "Products", route: "/products"},
@@ -50,6 +50,10 @@ const TopAppBar = () => {
                     {label: 'Orders', route: '/orders'},
                     {label: 'Log out', route: '/logout'}])
         setImg(user.img)
+        if(user.accessLevel === ADMIN_LEVEL){
+          setSettings(settings => [...settings, {label: 'Admin Panel', route: '/admin'}])
+        }
+
       }else{
         setUserLogged(false)
         setSettings([{label: 'Log in', route: '/login'},

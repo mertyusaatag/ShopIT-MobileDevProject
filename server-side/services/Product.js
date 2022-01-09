@@ -31,11 +31,16 @@ const updateProduct = (filter, update) => {
     return Product.findOneAndUpdate(filter, update, { new: true })
 }
 
+const deleteAllProducts = () => {
+    return Product.deleteMany({})
+}
+
 module.exports = {
     addProduct,
     listAllProducts,
     findProductByID,
     findProductByName,
     deleteProductByID,
-    updateProduct
+    updateProduct,
+    deleteAllProducts
 }

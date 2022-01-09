@@ -7,6 +7,8 @@ import LogOut from './Components/LogOut';
 import UserProfile from './Components/UserProfile';
 import AddProductForm from './Components/AddProductForm';
 import Orders from './Components/Orders';
+import AdminPanel from './Components/AdminPanel';
+import EditProductForm from './Components/EditProductForm';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route exact path="/profile" element={<UserProfile/>} />
           <Route exact path="/addproduct" element={<AddProductForm/>} />
           <Route exact path="/userOrders" element={<Orders/>} />
+          <Route exact path="/editproduct/:id" element={<EditProductForm/>} />
+          <Route exact path="/admin" element={<AdminPanel/>} />
         </Routes>
       </Router>
     </div>
