@@ -12,6 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import CartDialog from "./Cart"
 import MenuItem from '@mui/material/MenuItem';
 import { GUEST_LEVEL } from '../config/global_constants';
 
@@ -135,9 +136,11 @@ const TopAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {isUserLogged 
             ? <IconButton size="large" aria-label="shopping-cart" color="inherit">
-                <ShoppingCartIcon />
+                <ShoppingCartIcon/>
+                <CartDialog/>
               </IconButton>
             : "" }
+            
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src={!userImg ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />
