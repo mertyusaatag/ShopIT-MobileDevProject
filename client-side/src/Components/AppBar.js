@@ -14,6 +14,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
+import logo_transparent from "../Images/logo_transparent.png";
 
 const pages = [{label: "Homepage", route: "/homepage"},
               {label: "Products", route: "/products"},
@@ -81,7 +82,7 @@ const TopAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -126,7 +127,7 @@ const TopAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
