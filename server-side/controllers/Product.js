@@ -97,16 +97,14 @@ const addImages = async (req, res) => {
 }
 
 const getAll = async (req, res) => {
-    const auth = verifyToken(req.headers.authorization)
-    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+    products = await listAllProducts()
+    if(!products){
         return res
-            .status(httpStatus.UNAUTHORIZED)
-            .send({
-                message:
-                    "You don't have access to this feature.",
-            });
-    } else {
-        products = await listAllProducts()
+        .status(httpStatus.NOT_FOUND)
+        .send({
+            message: "No products"
+        })
+    }else{
         const productImgs = products.map(product => {
             let files = []
             product.img.map((img) => {
@@ -120,31 +118,28 @@ const getAll = async (req, res) => {
             .status(httpStatus.OK)
             .send(productImgs)
     }
+
 }
 
 const getOneByID = async (req, res) => {
-
-const auth = verifyToken(req.headers.authorization)
-if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
-    return res
-        .status(httpStatus.UNAUTHORIZED)
-        .send({
-            message:
-                "You don't have access to this feature.",
-        });
-} else {
     product = await findProductByID(req.params.id)
-    const productImg = product.img.map((img) => {
-        let files = []
-        file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
-        files.push(file)
-        return files
-    })
-    product.img = productImg
-    return res
-        .status(httpStatus.OK)
-        .send(product)
-
+    if (!product) {
+        return res
+            .status(httpStatus.NOT_FOUND)
+            .send({
+                message: "Product not found"
+            })
+    } else {
+        const productImg = product.img.map((img) => {
+            let files = []
+            file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
+            files.push(file)
+            return files
+        })
+        product.img = productImg
+        return res
+            .status(httpStatus.OK)
+            .send(product)
     }
 }
 const deleteOne = async (req, res) => {
@@ -221,7 +216,7 @@ const clearImages = async (req, res) => {
             fs.unlinkSync(`./uploads/products/${img}`)
         })
         product.img = [];
-        await updateProduct({_id: req.params.id}, product)
+        await updateProduct({ _id: req.params.id }, product)
         return res
             .status(httpStatus.OK)
             .send("Images cleared")
@@ -246,7 +241,7 @@ const update = async (req, res) => {
         product.price = req.body.price
         product.quantity = req.body.quantity
         product.inStock = req.body.inStock
-        await updateProduct({_id: req.body._id}, product)
+        await updateProduct({ _id: req.body._id }, product)
         return res
             .status(httpStatus.OK)
             .send(`Product: ${product._id} updated`)

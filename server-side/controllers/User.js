@@ -133,7 +133,7 @@ const changePassword = async (req, res) => {
 }
 
 const getUserByEmail = async (req, res) =>{
-  email = req.param('email')
+  email = req.params.email
   
   const auth = verifyToken(req.headers.authorization)
   if(auth.accessLevel > process.env.ACCESS_LEVEL_GUEST){
@@ -242,5 +242,6 @@ const getUserByEmail = async (req, res) =>{
     changePassword,
     getAllUsers,
     deleteUserById,
-    deleteAll
+    deleteAll,
+    getUserByEmail
   }

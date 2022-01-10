@@ -39,7 +39,7 @@ export default function ProductsTable() {
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem("user"))
         setAdmin(loggedUser)
-        axios.get(`${SERVER_HOST}/products/getAllProducts`, { headers: { 'authorization': loggedUser.token } })
+        axios.get(`${SERVER_HOST}/products/getAllProducts`)
             .then(res => {
                 setRows(res.data)
             })

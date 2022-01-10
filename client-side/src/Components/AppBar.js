@@ -47,7 +47,7 @@ const TopAppBar = () => {
       if(user.accessLevel > GUEST_LEVEL){
         setUserLogged(true) 
         setSettings([{label: 'Profile', route: '/profile'},
-                    {label: 'Orders', route: '/orders'},
+                    {label: 'Orders', route: '/userOrders'},
                     {label: 'Log out', route: '/logout'}])
         setImg(user.img)
         if(user.accessLevel === ADMIN_LEVEL){

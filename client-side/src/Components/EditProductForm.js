@@ -142,7 +142,7 @@ const EditProductForm = () => {
         if (loggedUser.accessLevel >= ADMIN_LEVEL) {
             setAdminLogged(true)
             setUser(loggedUser)
-            axios.get(`${SERVER_HOST}/products/getProduct/${id}`, { headers: { "authorization": loggedUser.token } })
+            axios.get(`${SERVER_HOST}/products/getProduct/${id}`)
                 .then(res => {
                     setProduct(res.data)
                 })
