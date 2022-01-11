@@ -39,7 +39,7 @@ const Homepage = () => {
     const updateView = () => {
         const mql = window.matchMedia('(max-width: 850px)');
         setMobileView(mql.matches)
-      };
+    };
 
     useEffect(() => {
         window.addEventListener("resize", updateView);
@@ -86,7 +86,7 @@ const Homepage = () => {
                         <Grid container item spacing={3} direction="row" alignItems="stretch" justifyContent="center" >
                             <Grid item xs>
                                 {!user
-                                    ? <Paper style={{ padding: "10px 50px", height:"100%"  }}>
+                                    ? <Paper style={{ padding: "10px 50px", height: "100%" }}>
                                         <Typography variant="h6">Sign in for the best experience</Typography><br />
                                         <Button component={Link} to="/login" variant="contained" fullWidth >Sign in</Button><br />
                                         <Typography>
@@ -95,15 +95,21 @@ const Homepage = () => {
                                     </Paper>
                                     : <Paper style={{ padding: "10px 50px", height: "100%" }}>
                                         <Typography variant="h6">Welcome back {user.name}!</Typography><br />
-                                        <Button component={Link} to="/profile" variant="contained"  >Visit your profile</Button><br /><br />
-                                        <Button component={Link} to="/userOrders" variant="contained"  >View your orders</Button><br /><br />
-                                        {user.accessLevel === ADMIN_LEVEL
-                                            ? <div>
+                                        <Grid container spacing = {2} alignItems="stretch" justifyContent="center">
+                                            <Grid item>
+                                                <Button component={Link} to="/profile" variant="contained"  >Visit your profile</Button>
+                                            </Grid>
+                                            <Grid item>
+                                                <Button component={Link} to="/userOrders" variant="contained"  >View your orders</Button>
+                                            </Grid>
+                                            {user.accessLevel === ADMIN_LEVEL
+                                            ? <Grid item>
                                                 <Button component={Link} to="/admin" variant="contained" color="error"  >
                                                     Go to admin panel
-                                                </Button><br />
-                                            </div>
+                                                </Button>
+                                                </Grid>
                                             : ""}
+                                        </Grid>
                                     </Paper>}
                             </Grid>
                             <Grid item xs>
