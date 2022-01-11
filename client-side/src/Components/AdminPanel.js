@@ -24,13 +24,14 @@ const AdminPanel = () => {
 
     const [adminFlag, setAdminFlag] = useState(false)
     const [admin, setAdmin] = useState(null)
+    const [updateFlag, setUpdateFlag] = useState(false)
 
     const productsHandleOnClick = (e) => {
         e.preventDefault()
         axios.delete(`${SERVER_HOST}/products/deleteAll`, { headers: { 'authorization': admin.token } })
         .then(res => {
             console.log(res.data)
-            window.location.reload()
+            setUpdateFlag(true)
         })
         .catch(err => {
             console.log(err.response.data.message)
@@ -42,7 +43,7 @@ const AdminPanel = () => {
         axios.delete(`${SERVER_HOST}/users/deleteAll`, { headers: { 'authorization': admin.token } })
             .then(res => {
                 console.log(res.data)
-                window.location.reload()
+                setUpdateFlag(true)
             })
             .catch(err => {
                 console.log(err.response.data.message)
@@ -58,7 +59,8 @@ const AdminPanel = () => {
             setAdminFlag(true)
             setAdmin(user)
         }
-    }, [])
+        setUpdateFlag(false)
+    }, [updateFlag])
 
     return (
         <div className="Adminpanel">
