@@ -9,6 +9,7 @@ import AddProductForm from './Components/AddProductForm';
 import Orders from './Components/Orders';
 import AdminPanel from './Components/AdminPanel';
 import EditProductForm from './Components/EditProductForm';
+import CategoryPage from './Components/CategoryPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route exact path="/userOrders" element={<Orders/>} />
           <Route exact path="/editproduct/:id" element={<EditProductForm/>} />
           <Route exact path="/admin" element={<AdminPanel/>} />
+          <Route exact path="/category/:category" element={<CategoryPage/>} />
         </Routes>
       </Router>
     </div>
