@@ -99,7 +99,7 @@ const Homepage = () => {
                                         <Button component={Link} to="/userOrders" variant="contained"  >View your orders</Button><br /><br />
                                         {user.accessLevel === ADMIN_LEVEL
                                             ? <div>
-                                                <Button component={Link} to="/userOrders" variant="contained" color="error"  >
+                                                <Button component={Link} to="/admin" variant="contained" color="error"  >
                                                     Go to admin panel
                                                 </Button><br />
                                             </div>
