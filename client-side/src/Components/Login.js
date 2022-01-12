@@ -39,13 +39,13 @@ const LogIn = () => {
                 }
                 localStorage.setItem("user", JSON.stringify(user))
                 setUserLogged(true)
+                const cart = []
+                localStorage.setItem("cart",JSON.stringify(cart))
             })
             .catch(err => {
                 setErrorFlag(true)
                 setErrorMessage(err.response.data.message)
             })
-            const cart = []
-            localStorage.setItem("cart",JSON.stringify(cart))
     }
 
     useEffect(() => {
