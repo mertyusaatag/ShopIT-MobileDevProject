@@ -1,7 +1,9 @@
-const { addProduct, listAllProducts, findProductByID, deleteProductByID, findProductByName, updateProduct } = require("../services/Product");
+const { addProduct, listAllProducts, findProductByID, deleteProductByID, findProductByName, updateProduct, deleteAllProducts } = require("../services/Product");
 const httpStatus = require("http-status");
 const { verifyToken } = require("../utils/helper");
 const fs = require("fs");
+
+
 const create = async (req, res) => {
     const auth = verifyToken(req.headers.authorization)
     if (auth.accessLevel > process.env.ACCESS_LEVEL_GUEST) {
@@ -95,20 +97,49 @@ const addImages = async (req, res) => {
 }
 
 const getAll = async (req, res) => {
-    try {
-        allProducts = await listAllProducts()
-        res.status(httpStatus.OK).send(allProducts)
-    } catch (error) {
-        res.status(httpStatus.BAD_REQUEST).send(error.message)
+    products = await listAllProducts()
+    if(!products){
+        return res
+        .status(httpStatus.NOT_FOUND)
+        .send({
+            message: "No products"
+        })
+    }else{
+        const productImgs = products.map(product => {
+            let files = []
+            product.img.map((img) => {
+                file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
+                files.push(file)
+            })
+            product.img = files
+            return product
+        })
+        return res
+            .status(httpStatus.OK)
+            .send(productImgs)
     }
+
 }
 
 const getOneByID = async (req, res) => {
-    try {
-        product = await findProductByID(req.params.id)
-        res.status(httpStatus.OK).send(product)
-    } catch (error) {
-        res.status(httpStatus.BAD_REQUEST).send(error.message)
+    product = await findProductByID(req.params.id)
+    if (!product) {
+        return res
+            .status(httpStatus.NOT_FOUND)
+            .send({
+                message: "Product not found"
+            })
+    } else {
+        const productImg = product.img.map((img) => {
+            let files = []
+            file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
+            files.push(file)
+            return files
+        })
+        product.img = productImg
+        return res
+            .status(httpStatus.OK)
+            .send(product)
     }
 }
 const deleteOne = async (req, res) => {
@@ -121,7 +152,7 @@ const deleteOne = async (req, res) => {
                     fs.unlinkSync(`./uploads/products/${img}`)
                 })
                 await deleteProductByID(req.params.id)
-                res.status(httpStatus.OK).send("Product deleted")
+                res.status(httpStatus.OK).send("Product removed")
             } catch (error) {
                 res.status(httpStatus.BAD_REQUEST).send(error.message)
             }
@@ -143,10 +174,87 @@ const deleteOne = async (req, res) => {
     }
 }
 
+const deleteAll = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+        return res
+            .status(httpStatus.UNAUTHORIZED)
+            .send({
+                message:
+                    "You don't have access to this feature.",
+            });
+    } else {
+        fs.readdir(`./uploads/products`, (err, files) => {
+            if (err) {
+                return res
+                    .status(httpStatus.BAD_REQUEST)
+                    .send("Something went wrong")
+            }
+            for (const file of files) {
+                fs.unlinkSync(`./uploads/products/${file}`)
+            }
+        })
+        await deleteAllProducts()
+        return res
+            .status(httpStatus.OK)
+            .send("All products removed")
+    }
+}
+
+const clearImages = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+        return res
+            .status(httpStatus.UNAUTHORIZED)
+            .send({
+                message:
+                    "You don't have access to this feature.",
+            });
+    } else {
+        product = await findProductByID(req.params.id)
+        product.img.map((img) => {
+            fs.unlinkSync(`./uploads/products/${img}`)
+        })
+        product.img = [];
+        await updateProduct({ _id: req.params.id }, product)
+        return res
+            .status(httpStatus.OK)
+            .send("Images cleared")
+    }
+}
+
+const update = async (req, res) => {
+    const auth = verifyToken(req.headers.authorization)
+    if (auth.accessLevel < process.env.ACCESS_LEVEL_ADMIN) {
+        return res
+            .status(httpStatus.UNAUTHORIZED)
+            .send({
+                message:
+                    "You don't have access to this feature.",
+            });
+    } else {
+        product = await findProductByID(req.body._id)
+        product.name = req.body.name
+        product.color = req.body.color
+        product.categories = req.body.categories
+        product.desc = req.body.desc
+        product.price = req.body.price
+        product.quantity = req.body.quantity
+        product.inStock = req.body.inStock
+        await updateProduct({ _id: req.body._id }, product)
+        return res
+            .status(httpStatus.OK)
+            .send(`Product: ${product._id} updated`)
+    }
+}
+
 module.exports = {
     create,
     getAll,
     getOneByID,
     deleteOne,
-    addImages
+    addImages,
+    deleteAll,
+    clearImages,
+    update
 }

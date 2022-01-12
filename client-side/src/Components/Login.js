@@ -44,6 +44,8 @@ const LogIn = () => {
                 setErrorFlag(true)
                 setErrorMessage(err.response.data.message)
             })
+            const cart = []
+            localStorage.setItem("cart",JSON.stringify(cart))
     }
 
     useEffect(() => {

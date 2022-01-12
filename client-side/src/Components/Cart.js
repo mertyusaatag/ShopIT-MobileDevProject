@@ -1,95 +1,37 @@
 import * as React from 'react';
-import {useState, useEffect} from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Button, Typography, Grid, ImageList } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
 
 export default function CartDialog() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  let [cart, setCart] = useState([])
-let localCart = localStorage.getItem("cart");
+  const [cart, setCart] = useState([])
 
-
-
-//this is called on component mount
-useEffect(() => {
-//turn it into js
-localCart = JSON.parse(localCart);
-//load persisted cart into state if it exists
-if (localCart) setCart(localCart)
-
-}, []) //the empty array ensures useEffect only runs once
-
-
-const addItem = (item) => {
-
-//create a copy of our cart state, avoid overwritting existing state
-let cartCopy = [...cart];
-
-//assuming we have an ID field in our item
-let {ID} = item;
-
-//look for item in cart array
-let existingItem = cartCopy.find(cartItem => cartItem.ID == ID);
-
-//if item already exists
-if (existingItem) {
-    existingItem.quantity += item.quantity //update item
-} else { //if item doesn't exist, simply add it
-  cartCopy.push(item)
+  const imageStyle = {
+    display: 'block',
+    margin: 'auto',
+    width: 50,
+    height: 50,
 }
+  
+  useEffect(() => {
 
-//update app state
-setCart(cartCopy)
+    setCart(JSON.parse(localStorage.getItem('cart')));
+}, [])
 
-//make cart a string and store in local space
-let stringCart = JSON.stringify(cartCopy);
-localStorage.setItem("cart", stringCart)
-
-}
-const editItem = (itemID, amount) => {
-
-let cartCopy = [...cart]
-
-//find if item exists, just in case
-let existentItem = cartCopy.find(item => item.ID == itemID);
-
-//if it doesnt exist simply return
-if (!existentItem) return
-
-//continue and update quantity
-existentItem.quantity += amount;
-
-//validate result
-if (existentItem.quantity <= 0) {
-  //remove item  by filtering it from cart array
-  cartCopy = cartCopy.filter(item => item.ID != itemID)
-}
-
-//again, update state and localState
-setCart(cartCopy);
-
-let cartString = JSON.stringify(cartCopy);
-localStorage.setItem('cart', cartString);
-}
-
-const removeItem = (itemID) => {
-
-//create cartCopy
-let cartCopy = [...cart]
-
-cartCopy = cartCopy.filter(item => item.ID != itemID);
-
-//update state and local
-setCart(cartCopy);
-
-let cartString = JSON.stringify(cartCopy)
-localStorage.setItem('cart', cartString)
-}
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -98,6 +40,30 @@ localStorage.setItem('cart', cartString)
   const handleClose = () => {
     setOpen(false);
   };
+  const removeItem = (productID) => {
+  
+    //create cartCopy
+    let tempCart = [...cart]
+    
+    let existingItem = tempCart.find(cartItem => cartItem._id ==productID)
+    if(existingItem.cartQuantity > 1)
+    {
+      existingItem.cartQuantity--;
+    }
+    else{
+       tempCart = tempCart.filter(item => item._id != productID);
+       window.location.reload();
+    }
+    
+    //update state and local
+    setCart(tempCart);
+    ;
+    const cartString = JSON.stringify(tempCart)
+    tempCart = []
+    localStorage.setItem('cart', cartString)
+    console.log(tempCart);
+    console.log(cart);
+  }
 
   return (
     <div>
@@ -111,17 +77,47 @@ localStorage.setItem('cart', cartString)
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {"Basket"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-              
+          <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
+            <Table stickyHeader sx={{ minWidth: 650, tableLayout: "auto" }} size="small" aria-label="cocktail table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Image</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Unit Prices</TableCell>
+                        <TableCell>Quantity</TableCell>
+                        <TableCell>Total Prices</TableCell>
+                        <TableCell>Sub Total</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                { cart.map((row) => (
+                        <TableRow key={row._id}sx={{ height: 50 }}>
+                          <TableCell><img src={`data:;base64,${row.img}`} alt={`product_photo`} style={imageStyle} /></TableCell>
+                            <TableCell>{row.name}</TableCell>
+                            <TableCell>{row.price}</TableCell>
+                            <TableCell>{row.cartQuantity}</TableCell>
+                            <TableCell>{row.price*row.cartQuantity}</TableCell>
+                            <TableCell>
+                                <Button variant="contained" color="error" data-id={row._id} onClick={() =>removeItem(row._id)}>
+                                    Delete
+                                </Button> <br />
+                            </TableCell>
+                            </TableRow>
+                          
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Go Back</Button>
           <Button onClick={handleClose} autoFocus>
-            Agree
+            Checkout
           </Button>
         </DialogActions>
       </Dialog>

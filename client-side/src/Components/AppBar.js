@@ -14,7 +14,8 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import CartDialog from "./Cart"
 import MenuItem from '@mui/material/MenuItem';
-import { GUEST_LEVEL } from '../config/global_constants';
+import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
+import logo_transparent from "../Images/logo_transparent.png";
 
 const pages = [{label: "Homepage", route: "/homepage"},
               {label: "Products", route: "/products"},
@@ -26,6 +27,7 @@ const TopAppBar = () => {
   const [isUserLogged, setUserLogged] = useState(false);
   const [settings, setSettings] = useState([])
   const [userImg, setImg] = useState(null)
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -43,14 +45,19 @@ const TopAppBar = () => {
   };
 
   useEffect(() => {
+ 
     const user = JSON.parse(localStorage.getItem("user"))
     if(user){
       if(user.accessLevel > GUEST_LEVEL){
         setUserLogged(true) 
         setSettings([{label: 'Profile', route: '/profile'},
-                    {label: 'Orders', route: '/orders'},
+                    {label: 'Orders', route: '/userOrders'},
                     {label: 'Log out', route: '/logout'}])
         setImg(user.img)
+        if(user.accessLevel === ADMIN_LEVEL){
+          setSettings(settings => [...settings, {label: 'Admin Panel', route: '/admin'}])
+        }
+
       }else{
         setUserLogged(false)
         setSettings([{label: 'Log in', route: '/login'},
@@ -64,6 +71,8 @@ const TopAppBar = () => {
           name: "GUEST",
           accessLevel: 0
       }
+         const cart = []
+      localStorage.setItem("cart",JSON.stringify(cart))
       localStorage.setItem("user", JSON.stringify(user))
     }
 },[])
@@ -78,7 +87,7 @@ const TopAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -123,7 +132,7 @@ const TopAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -137,7 +146,8 @@ const TopAppBar = () => {
             {isUserLogged 
             ? <IconButton size="large" aria-label="shopping-cart" color="inherit">
                 <ShoppingCartIcon/>
-                <CartDialog/>
+              
+                <CartDialog></CartDialog>
               </IconButton>
             : "" }
             
