@@ -4,7 +4,7 @@ const { verifyToken } = require("../utils/helper");
 const fs = require("fs");
 
 const userOrders = async (req, res) =>{
-  const  id = req.param(`userId`)
+  const  id = req.params.userId;
   
 const auth = verifyToken(req.headers.authorization)
 
