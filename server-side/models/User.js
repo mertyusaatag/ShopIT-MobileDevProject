@@ -38,6 +38,10 @@ const UserSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    cart: {
+      type : mongoose.Types.ObjectId,
+      ref:"Cart",
+    },
   },
   { timestamps: true }
 );

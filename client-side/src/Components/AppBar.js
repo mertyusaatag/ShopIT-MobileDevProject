@@ -12,6 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import CartDialog from "./Cart"
 import MenuItem from '@mui/material/MenuItem';
 import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
 import logo_transparent from "../Images/logo_transparent.png";
@@ -24,6 +25,7 @@ const TopAppBar = () => {
   const [isUserLogged, setUserLogged] = useState(false);
   const [settings, setSettings] = useState([])
   const [userImg, setImg] = useState(null)
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,6 +43,7 @@ const TopAppBar = () => {
   };
 
   useEffect(() => {
+ 
     const user = JSON.parse(localStorage.getItem("user"))
     if(user){
       if(user.accessLevel > GUEST_LEVEL){
@@ -66,6 +69,8 @@ const TopAppBar = () => {
           name: "GUEST",
           accessLevel: 0
       }
+         const cart = []
+      localStorage.setItem("cart",JSON.stringify(cart))
       localStorage.setItem("user", JSON.stringify(user))
     }
 },[])
@@ -134,9 +139,12 @@ const TopAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {isUserLogged 
             ? <IconButton size="large" aria-label="shopping-cart" color="inherit">
-                <ShoppingCartIcon />
+                <ShoppingCartIcon/>
+              
+                <CartDialog></CartDialog>
               </IconButton>
             : "" }
+            
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src={!userImg ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />
