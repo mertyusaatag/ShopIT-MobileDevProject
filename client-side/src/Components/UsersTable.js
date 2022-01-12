@@ -15,6 +15,7 @@ import axios from 'axios';
 export default function UsersTable() {
     const [rows, setRows] = useState([])
     const [user, setUser] = useState(null)
+    const [updateFlag, setUpdateFlag] = useState(false)
 
     const handleOnClick = (e) => {
         e.preventDefault()
@@ -22,7 +23,7 @@ export default function UsersTable() {
         axios.delete(`${SERVER_HOST}/users/delete/${id}`, { headers: { 'authorization': user.token } })
         .then(res => {
             console.log(res.data)
-            window.location.reload()
+            setUpdateFlag(true)
         })
         .catch(err => {
             console.log(err.response.data.message)
@@ -39,7 +40,9 @@ export default function UsersTable() {
             .catch(err => {
                 console.log(err.response.data.message)
             })
-    }, [])
+        console.log("update")
+        setUpdateFlag(false)
+    }, [updateFlag])
 
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
@@ -55,7 +58,7 @@ export default function UsersTable() {
                 </TableHead>
                 <TableBody>
                     {rows.map((row) => (
-                        <TableRow sx={{ height: 50 }}>
+                        <TableRow sx={{ height: 50 }} key={row._id}>
                             <TableCell component="th" scope="row">
                                 {row._id}
                             </TableCell>

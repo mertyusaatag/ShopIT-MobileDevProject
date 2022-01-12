@@ -16,10 +16,8 @@ import CartDialog from "./Cart"
 import MenuItem from '@mui/material/MenuItem';
 import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
 import logo_transparent from "../Images/logo_transparent.png";
+import CategoriesList from './CategoriesList';
 
-const pages = [{label: "Homepage", route: "/homepage"},
-              {label: "Products", route: "/products"},
-              {label: "Categories", route: "/categories"}];
 
 const TopAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -84,7 +82,8 @@ const TopAppBar = () => {
           <Typography
             variant="h6"
             noWrap
-            component="div"
+            component={Link}
+            to="/homepage"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
@@ -119,27 +118,22 @@ const TopAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem component={Link} key={page.label} to={page.route} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.label}</Typography>
+                <MenuItem component={Link} key="homepage" to="/homepage"onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Homepage</Typography>
                 </MenuItem>
-              ))}
+              <CategoriesList/>
             </Menu>
           </Box>
           <Typography
             variant="h6"
             noWrap
-            component="div"
+            component={Link}
+            to="/homepage"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-                <MenuItem component={Link} key={page.label} to={page.route} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
