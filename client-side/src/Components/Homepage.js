@@ -1,14 +1,4 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { Button, Typography, Grid, ImageList } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { ADMIN_LEVEL, SERVER_HOST } from '../config/global_constants';
-import { Link } from 'react-router-dom'
-import axios from 'axios';
 import TopAppBar from './AppBar';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -233,7 +223,7 @@ const Homepage = () => {
                                     <Typography variant="h6">Categories you might be interested in</Typography><br />
                                     <Grid container direction="row" spacing={3} >
                                         {chosenCategories.map((category, index) => (
-                                            <Grid item xs>
+                                            <Grid item xs key={index}>
                                                 <Avatar src={category.img}
                                                     sx={{ width: 100, height: 100, margin: "auto", border: '1px solid lightgrey' }}
                                                     component={Link}
