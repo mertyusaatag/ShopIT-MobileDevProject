@@ -53,40 +53,40 @@ const Homepage = () => {
 //         height: 50,
 //     }
 
-//     const addCart= (product) => {
-//         //create a copy of our cart state, avoid overwritting existing state
+  //   const addCart= (product) => {
+  //       //create a copy of our cart state, avoid overwritting existing state
         
   
-//         let tempCart = [...cart];
-//         console.log(tempCart)
+  //       let tempCart = [...cart];
+  //       console.log(tempCart)
   
-//   product = {
-//     ...product,
-//     cartQuantity:1
-//   }
-//   //assuming we have an ID field in our item
+  // product = {
+  //   ...product,
+  //   cartQuantity:1
+  // }
+  // //assuming we have an ID field in our item
   
-//   //look for item in cart array
-//   let existingItem = tempCart.find(cartItem => cartItem._id == product._id);
+  // //look for item in cart array
+  // let existingItem = tempCart.find(cartItem => cartItem._id == product._id);
   
-//   //if item already exists
-//   if (existingItem) {
-//     existingItem.cartQuantity++ //update item
-//   } else { //if item doesn't exist, simply add it
-//     //setCart.push(product)
-//     tempCart.push(product);
+  // //if item already exists
+  // if (existingItem) {
+  //   existingItem.cartQuantity++ //update item
+  // } else { //if item doesn't exist, simply add it
+  //   //setCart.push(product)
+  //   tempCart.push(product);
     
-//   }
+  // }
   
-//    //update app state
-//    setCart(tempCart)
+  //  //update app state
+  //  setCart(tempCart)
   
-//    //make cart a string and store in local space
-//    const stringCart = JSON.stringify(tempCart);
-//    localStorage.setItem("cart", stringCart)
-//    tempCart = []
-//    window.location.reload();
-//     }
+  //  //make cart a string and store in local space
+  //  const stringCart = JSON.stringify(tempCart);
+  //  localStorage.setItem("cart", stringCart)
+  //  tempCart = []
+  //  window.location.reload();
+  //   }
 
 //     useEffect(() => {
 //          //turn it into js
