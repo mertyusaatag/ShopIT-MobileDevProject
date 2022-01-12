@@ -12,6 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import CartDialog from "./Cart"
 import MenuItem from '@mui/material/MenuItem';
 import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
 import logo_transparent from "../Images/logo_transparent.png";
@@ -24,6 +25,7 @@ const TopAppBar = () => {
   const [isUserLogged, setUserLogged] = useState(false);
   const [settings, setSettings] = useState([])
   const [userImg, setImg] = useState(null)
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,34 +43,37 @@ const TopAppBar = () => {
   };
 
   useEffect(() => {
+
     const user = JSON.parse(localStorage.getItem("user"))
-    if(user){
-      if(user.accessLevel > GUEST_LEVEL){
-        setUserLogged(true) 
-        setSettings([{label: 'Profile', route: '/profile'},
-                    {label: 'Orders', route: '/userOrders'},
-                    {label: 'Log out', route: '/logout'}])
+    if (user) {
+      if (user.accessLevel > GUEST_LEVEL) {
+        setUserLogged(true)
+        setSettings([{ label: 'Profile', route: '/profile' },
+        { label: 'Orders', route: '/userOrders' },
+        { label: 'Log out', route: '/logout' }])
         setImg(user.img)
-        if(user.accessLevel === ADMIN_LEVEL){
-          setSettings(settings => [...settings, {label: 'Admin Panel', route: '/admin'}])
+        if (user.accessLevel === ADMIN_LEVEL) {
+          setSettings(settings => [...settings, { label: 'Admin Panel', route: '/admin' }])
         }
 
-      }else{
+      } else {
         setUserLogged(false)
-        setSettings([{label: 'Log in', route: '/login'},
-                     {label: 'Sign up', route: '/signup'}])
+        setSettings([{ label: 'Log in', route: '/login' },
+        { label: 'Sign up', route: '/signup' }])
       }
-    }else{
+    } else {
       setUserLogged(false)
-      setSettings([{label: 'Log in', route: '/login'},
-                   {label: 'Sign up', route: '/signup'}])
+      setSettings([{ label: 'Log in', route: '/login' },
+      { label: 'Sign up', route: '/signup' }])
       const user = {
-          name: "GUEST",
-          accessLevel: 0
+        name: "GUEST",
+        accessLevel: 0
       }
+      const cart = []
+      localStorage.setItem("cart", JSON.stringify(cart))
       localStorage.setItem("user", JSON.stringify(user))
     }
-},[])
+  }, [])
 
   return (
     <AppBar position="static">
@@ -81,7 +86,7 @@ const TopAppBar = () => {
             to="/homepage"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150} />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -113,10 +118,10 @@ const TopAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-                <MenuItem component={Link} key="homepage" to="/homepage"onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Homepage</Typography>
-                </MenuItem>
-              <CategoriesList/>
+              <MenuItem component={Link} key="homepage" to="/homepage" onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">Homepage</Typography>
+              </MenuItem>
+              <CategoriesList />
             </Menu>
           </Box>
           <Typography
@@ -126,17 +131,16 @@ const TopAppBar = () => {
             to="/homepage"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img src={logo_transparent} alt="ShopIT" height={50} width={150}/>
+            <img src={logo_transparent} alt="ShopIT" height={50} width={150} />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            {isUserLogged 
-            ? <IconButton size="large" aria-label="shopping-cart" color="inherit">
-                <ShoppingCartIcon />
-              </IconButton>
-            : "" }
+            <IconButton size="large" aria-label="shopping-cart" color="inherit">
+              <CartDialog />
+            </IconButton>
+
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src={!userImg ? "/static/images/avatar/2.jpg" : `data:;base64,${userImg}`} />

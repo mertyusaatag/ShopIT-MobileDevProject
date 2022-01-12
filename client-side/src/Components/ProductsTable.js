@@ -6,9 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button, Typography, Grid, ImageList } from '@mui/material';
+import { Button, Typography, ImageList } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { ADMIN_LEVEL, SERVER_HOST } from '../config/global_constants';
+import { SERVER_HOST } from '../config/global_constants';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 
@@ -22,6 +22,7 @@ const imageStyle = {
 export default function ProductsTable() {
     const [rows, setRows] = useState([])
     const [admin, setAdmin] = useState(null)
+    const [updateFlag, setUpdateFlag] = useState(false)
 
     const handleOnClick = (e) => {
         e.preventDefault()
@@ -29,7 +30,7 @@ export default function ProductsTable() {
         axios.delete(`${SERVER_HOST}/products/deleteProduct/${id}`, { headers: { 'authorization': admin.token } })
             .then(res => {
                 console.log(res.data)
-                window.location.reload()
+                setUpdateFlag(true)
             })
             .catch(err => {
                 console.log(err.response.data.message)
@@ -46,7 +47,8 @@ export default function ProductsTable() {
             .catch(err => {
                 console.log(err.response.data.message)
             })
-    }, [])
+        setUpdateFlag(false)
+    }, [updateFlag])
 
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
