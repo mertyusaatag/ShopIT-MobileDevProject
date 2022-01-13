@@ -19,6 +19,13 @@ const imageStyle = {
     height: 50,
 }
 
+const rowStyle = {
+    maxHeight: '200px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+}
+
 export default function ProductsTable() {
     const [rows, setRows] = useState([])
     const [admin, setAdmin] = useState(null)
@@ -57,7 +64,7 @@ export default function ProductsTable() {
                     <TableRow>
                         <TableCell>ID</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Description</TableCell>
+                        <TableCell style={rowStyle}>Description</TableCell>
                         <TableCell>Categories</TableCell>
                         <TableCell>Color</TableCell>
                         <TableCell>Price</TableCell>
@@ -66,9 +73,9 @@ export default function ProductsTable() {
                         <TableCell>Options</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow sx={{ height: 50 }}>
+                <TableBody >
+                    {rows.map((row, index) => (
+                        <TableRow key={index}>
                             <TableCell>{row._id}</TableCell>
                             <TableCell>{row.name}</TableCell>
                             <TableCell>{row.desc}</TableCell>

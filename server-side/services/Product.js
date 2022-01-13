@@ -48,5 +48,8 @@ module.exports = {
     deleteProductByID,
     updateProduct,
     deleteAllProducts,
+<<<<<<< HEAD
+=======
     getProductByCategory
+>>>>>>> Sprint
 }
