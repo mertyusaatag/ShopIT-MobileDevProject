@@ -79,6 +79,11 @@ function Checkout() {
         setSuccessFlag(false)
         setErrorFlag(false)
         setErrorMessage("")
+        if (cart.products.length) {
+            setProductsFlag(true)
+        }else{
+            setProductsFlag(false)
+        }
         if (name === "") {
             setErrorFlag(true)
             setErrorMessage("Name is required")
@@ -164,6 +169,8 @@ function Checkout() {
             setTotal(localCart.total)
             if (localCart.products.length) {
                 setProductsFlag(true)
+            }else{
+                setProductsFlag(false)
             }
         }
         return () => {

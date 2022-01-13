@@ -4,8 +4,7 @@ const OrderSchema = new mongoose.Schema(
     {
         userId : 
         {
-            type: mongoose.Types.ObjectId,
-            autopopulate: { maxDepth: 3 }
+            type: String,
         },
         products : 
         [
