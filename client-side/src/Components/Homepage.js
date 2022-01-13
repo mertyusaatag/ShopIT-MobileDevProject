@@ -18,17 +18,17 @@ import { GUEST_LEVEL, ADMIN_LEVEL, SERVER_HOST } from '../config/global_constant
 const slideImages = [asus, intel, corsair, ryzen]
 const chosenCategories = [{
     img: cpu,
-    link: "/category/cpu",
+    link: "/category/CPU",
     label: "CPUs"
 },
 {
     img: gpu,
-    link: "/category/gpu",
+    link: "/category/GPU",
     label: "GPUs"
 },
 {
     img: motherboard,
-    link: "/category/motherboard",
+    link: "/category/Motherboard",
     label: "Motherboards"
 }]
 
