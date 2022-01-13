@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const {create, getAll, getOneByID, deleteOne, addImages, deleteAll, clearImages, update} = require("../controllers/Product");
+const {getProductsByCategory,create, getAll, getOneByID, deleteOne, addImages, deleteAll, clearImages, update} = require("../controllers/Product");
 const upload = multer({
         dest: `./uploads/products`,
         fileFilter: (req, file, cb) => {
@@ -21,5 +21,6 @@ router.delete("/clearImages/:id", clearImages);
 router.put("/addImages",upload.array("img"), addImages)
 router.delete("/deleteAll", deleteAll)
 router.put("/update", update)
+router.get("/productsByCategory/:name",getProductsByCategory)
 
 module.exports = router;
