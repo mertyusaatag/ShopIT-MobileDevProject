@@ -5,47 +5,48 @@ import { Link } from 'react-router-dom'
 const categories = [{
     label: 'All products',
     url: '/category/all' // what ever will work for you here
-    },
-    {
+},
+{
     label: 'Laptops',
-    url: '/category/Laptop'
-    },
-    {
+    url: '/category/laptop' 
+},
+{
     label: 'PC Hardware',
-    url: '/category/PC%20Hardware'
-    },
-    {
+    url: '/category/PC%20Hardware' 
+},
+{
     label: 'Monitors',
-    url: '/category/Monitor'
-    },
-    {
+    url: '/category/monitor' 
+},
+{
     label: 'Keyboards',
-    url: '/category/Keyboard'
-    },
-    {
+    url: '/category/keyboard' 
+},
+{
     label: 'Mice',
-    url: '/category/Mouse'
-    },
-    {
+    url: '/category/mouse' 
+},
+{
     label: 'Headphones',
-    url: '/category/Headphone'
-    },
-    {
+    url: '/category/headphones' 
+},
+{
     label: 'GPUs',
-    url: '/category/Gpu'
-    },
-    {
+    url: '/category/gpu' 
+},
+{
     label: 'CPUs',
-    url: '/category/Cpu'
-    },
-    {
+    url: '/category/cpu' 
+},
+{
     label: 'RAM',
-    url: '/category/Ram'
-    },
-    {
+    url: '/category/ram' 
+},
+{
     label: 'Motherboards',
-    url: '/category/Motherboard'
-    },]
+    url: '/category/motherboard' 
+},]
+
 const CategoriesList = () => {
     return (
         <div className="CategoriesList" >
@@ -55,8 +56,9 @@ const CategoriesList = () => {
                 </ListSubheader>
             }>
                 {categories.map((category, index)=>(
-<ListItemButton key={index} component={Link} to={category.url}>{category.label}</ListItemButton>
-))}
+                    <ListItemButton key={index} component={Link} to={category.url}>{category.label}</ListItemButton>
+                ))}
+
             </List>
         </div>
     );

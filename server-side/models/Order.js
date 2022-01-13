@@ -5,7 +5,6 @@ const OrderSchema = new mongoose.Schema(
         userId : 
         {
             type: mongoose.Types.ObjectId,
-            ref:"User",
             autopopulate: { maxDepth: 3 }
         },
         products : 
