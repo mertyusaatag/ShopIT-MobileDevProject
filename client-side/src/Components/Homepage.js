@@ -3,7 +3,6 @@ import TopAppBar from './AppBar';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, Button, Avatar } from '@mui/material';
-import { Card, CardMedia, CardContent, CardActions } from '@mui/material';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import CategoriesList from './CategoriesList';
@@ -15,7 +14,6 @@ import cpu from '../Images/cpu_small.jpg'
 import gpu from '../Images/gpu_small.jpg'
 import motherboard from '../Images/motherboard_small.jpg'
 import { GUEST_LEVEL, ADMIN_LEVEL, SERVER_HOST } from '../config/global_constants';
-import axios from 'axios';
 
 const slideImages = [asus, intel, corsair, ryzen]
 const chosenCategories = [{
@@ -35,198 +33,24 @@ const chosenCategories = [{
 }]
 
 const Homepage = () => {
-    // <<<<<<< HEAD
-    //     const [productList,setProductList] = useState([])
-    //     const [cart, setCart] = useState([])
-    //     const imageStyle = {
-    //         display: 'block',
-    //         margin: 'auto',
-    //         width: 50,
-    //         height: 50,
-    //     }
-
-    //     const addCart= (product) => {
-    //         //create a copy of our cart state, avoid overwritting existing state
-
-
-    //         let tempCart = [...cart];
-    //         console.log(tempCart)
-
-    //   product = {
-    //     ...product,
-    //     cartQuantity:1
-    //   }
-    //   //assuming we have an ID field in our item
-
-    //   //look for item in cart array
-    //   let existingItem = tempCart.find(cartItem => cartItem._id == product._id);
-
-    //   //if item already exists
-    //   if (existingItem) {
-    //     existingItem.cartQuantity++ //update item
-    //   } else { //if item doesn't exist, simply add it
-    //     //setCart.push(product)
-    //     tempCart.push(product);
-
-    //   }
-
-    //    //update app state
-    //    setCart(tempCart)
-
-    //    //make cart a string and store in local space
-    //    const stringCart = JSON.stringify(tempCart);
-    //    localStorage.setItem("cart", stringCart)
-    //    tempCart = []
-    //    window.location.reload();
-    //     }
-
-    //     useEffect(() => {
-    //          //turn it into js
-    //          const localCart = JSON.parse(localStorage.getItem('cart'));
-    //          if (localCart) setCart(localCart)
-
-    //         axios.get(`${SERVER_HOST}/products/getAllProducts`)
-    //             .then(res => {
-    //                 setProductList(res.data)
-    //             })
-    //             .catch(err => {
-    //                 console.log(err.response.data.message)
-    //             })
-
-
-    //             //load persisted cart into state if it exists
-
-    //     }, [])
-    //     return(
-    //         <div className="Homepage">
-    //             <TopAppBar></TopAppBar>
-
-    //             <Container sx={{ py: 8 }} maxWidth="md">
-    //           {/* End hero unit */}
-    //           <Grid container spacing={4}>
-    //                     {productList.map((row) => (
-    //                          <Grid item key={row} xs={12} sm={6} md={4}>
-    //                          <Card
-    //                            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-    //                          >
-    //                              {row.img.map((photo) => ( 
-    //                               <CardMedia key={row._id}
-    //                               component="img"
-    //                               sx={{
-    //                                 // 16:9
-    //                                 pt: '56.25%',
-    //                               }}
-    //                               image={`data:;base64,${photo}`}
-    //                               alt={`product_photo`}
-    //                             />))}
-
-
-    //                            <CardContent sx={{ flexGrow: 1 }}>
-    //                              <Typography gutterBottom variant="h5" component="h2">
-    //                                {row.name}
-    //                              </Typography>
-    //                              <Typography>
-    //                                {row.desc}
-    //                              </Typography>
-    //                            </CardContent>
-    //                            <CardActions>
-    //                              <div>
-    //                              <Button size="small">{`${row.price} Add to Cart`}</Button>
-    //                              <Button size="small" onClick={()=>addCart(row)}>Go Details Page</Button>
-    //                             </div>
-    //                            </CardActions>
-    //                          </Card>
-    //                        </Grid>
-    //                     ))}
-    //                 </Grid>
-    //                 </Container>
-    //=======
     const [user, setUser] = useState(null)
     const [mobileView, setMobileView] = useState(false)
-    const [productList, setProductList] = useState([])
-    const [cart, setCart] = useState(null)
-    const imageStyle = {
-        display: 'block',
-        margin: 'auto',
-        width: 50,
-        height: 50,
-    }
     const updateView = () => {
         const mql = window.matchMedia('(max-width: 850px)');
         setMobileView(mql.matches)
     };
-
-
-    const addCart = (product) => {
-        //create a copy of our cart state, avoid overwritting existing state
-
-
-        let tempCart = cart;
-        console.log(tempCart)
-
-        product = {
-            ...product,
-            cartQuantity: 1
-        }
-        //assuming we have an ID field in our item
-
-        //look for item in cart array
-        let existingItem = tempCart.products.find(cartItem => cartItem._id === product._id);
-
-        //if item already exists
-        if (existingItem) {
-            existingItem.cartQuantity++ //update item
-        } else { //if item doesn't exist, simply add it
-            //setCart.push(product)
-            tempCart.products.push(product);
-
-        }
-        const total = tempCart.products.reduce((total, product) => total + product.price * product.cartQuantity, 0)
-        tempCart.total = total
-
-        //update app state
-        setCart(tempCart)
-
-        //make cart a string and store in local space
-        const stringCart = JSON.stringify(tempCart);
-        localStorage.setItem("cart", stringCart)
-        tempCart = []
-    }
 
     useEffect(() => {
         window.addEventListener("resize", updateView);
         return () => window.removeEventListener("resize", updateView);
     }, []);
 
-    useEffect(() => {
-        window.addEventListener("storage", () => {
-          const localCart = JSON.parse(localStorage.getItem('cart'));
-          if (localCart) setCart(localCart)
-        });
-    
-        return () => {
-          window.removeEventListener("storage", () => {
-            const localCart = JSON.parse(localStorage.getItem('cart'));
-            if (localCart) setCart(localCart)
-          });
-        };
-      }, []);
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('user'));
         if (loggedUser.accessLevel > GUEST_LEVEL) {
             setUser(loggedUser)
         }
-        const localCart = JSON.parse(localStorage.getItem('cart'));
-        if (localCart) setCart(localCart)
-
-        axios.get(`${SERVER_HOST}/products/getAllProducts`)
-            .then(res => {
-                setProductList(res.data)
-            })
-            .catch(err => {
-                console.log(err.response.data.message)
-            })
 
     }, [])
     return (
@@ -305,40 +129,6 @@ const Homepage = () => {
 
                                 </Paper>
                             </Grid>
-                        </Grid>
-                        <Grid container item spacing={3} direction="row" alignItems="stretch" justifyContent="center" >
-                            {productList.map((row) => (
-                                <Grid item key={row} xs={12} sm={6} md={4}>
-                                    <Card
-                                        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                                    >
-                                            <CardMedia key={row._id}
-                                                component="img"
-                                                sx={{
-                                                    // 16:9
-                                                    pt: '56.25%',
-                                                }}
-                                                image={`data:;base64,${row.img[0]}`}
-                                                alt={`product_photo`}
-                                            />
-
-
-                                        <CardContent sx={{ flexGrow: 1 }}>
-                                            <Typography gutterBottom variant="h5" component="h2">
-                                                {row.name}
-                                            </Typography>
-                                            <Typography>
-                                                {row.desc}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <div>
-                                                <Button size="small" onClick={() => addCart(row)}>{`${row.price} Add to Cart`}</Button>
-                                            </div>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            ))}
                         </Grid>
                     </Grid>
                 </Grid>

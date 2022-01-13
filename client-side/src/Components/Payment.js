@@ -4,6 +4,8 @@ import { SANDBOX_CLIENT_ID, SERVER_HOST } from "../config/global_constants";
 import PaypalButton from 'react-paypal-express-checkout'
 import axios from 'axios'
 import PaymentSuccess from "./PaymentSuccess";
+import PaymentError from "./PaymentError";
+import PaymentCancel from "./PaymentCancel"
 
 function Payment(props) {
     const [environment, setEnvironment] = useState("sandbox")
@@ -71,8 +73,8 @@ function Payment(props) {
                 onCancel={onCancel}
                 style={{color: "blue"}}/>
             {successFlag ? <PaymentSuccess paymentId={paymentId}/> : ""}
-            {errorFlag ? "" : ""}
-            {cancelFlag ? "" : ""}
+            {errorFlag ? <PaymentError/> : ""}
+            {cancelFlag ? <PaymentCancel/>: ""}
         </div>
       );
 }

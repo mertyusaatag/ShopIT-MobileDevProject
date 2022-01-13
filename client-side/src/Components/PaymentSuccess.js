@@ -16,15 +16,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function PaymentSuccess(props) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [userFlag, setUserFlag] = useState(false)
     const [homepageFlag, setHomepage] = useState(false)
     const [ordersFlag, setOrders] = useState(false)
     const paymentID = props.paymentID
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleOrders = () => {
         setOrders(true)
@@ -45,9 +42,6 @@ export default function PaymentSuccess(props) {
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Payment successfull.
-            </Button>
             <Dialog
                 open={open}
                 TransitionComponent={Transition}
@@ -55,11 +49,10 @@ export default function PaymentSuccess(props) {
                 onClose={handleHomepage}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+                <DialogTitle>{"PayPal payment confirmed."}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        <Typography variant="h5" color="success">Your payment was succesfull!</Typography>
-                        <Typography variant="h6">Thanks for your purchase.</Typography>
+                        <Typography variant="h6" color="success">Payment <b>{paymentID}</b> was succesfull!</Typography>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -67,8 +60,8 @@ export default function PaymentSuccess(props) {
                     {userFlag ? <Button onClick={handleOrders}>Your orders</Button> : ""}
                 </DialogActions>
             </Dialog>
-        {homepageFlag ? <Navigate to="/homepage"/> : ""}
-        {ordersFlag ? <Navigate to="/userOrders"/> : ""}
+            {homepageFlag ? <Navigate to="/homepage" /> : ""}
+            {ordersFlag ? <Navigate to="/userOrders" /> : ""}
         </div>
     );
 }
