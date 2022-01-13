@@ -18,6 +18,11 @@ const create = async (req, res) => {
                         });
                 } else {
                     newProduct = await addProduct(req.body)
+                    if(newProduc.quantity > 0){
+                        newProduct.inStock = true
+                    }else{
+                        newProduct.inStock = false
+                    }
                     res.status(httpStatus.CREATED).send(newProduct);
                 }
             } catch (error) {
@@ -240,7 +245,12 @@ const update = async (req, res) => {
         product.desc = req.body.desc
         product.price = req.body.price
         product.quantity = req.body.quantity
-        product.inStock = req.body.inStock
+        if(product.quantity > 0){
+            product.inStock = true
+        }else{
+            product.inStock = false
+        }
+        
         await updateProduct({ _id: req.body._id }, product)
         return res
             .status(httpStatus.OK)

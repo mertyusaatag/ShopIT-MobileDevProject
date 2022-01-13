@@ -8,6 +8,7 @@ import { SERVER_HOST } from '../config/global_constants';
 import moment from 'moment';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar'
 
 const OrderCard = (props) =>{
 
@@ -60,12 +61,12 @@ const OrderCard = (props) =>{
                                                     variant="body2"
                                                     color="text.primary" >
                                        
-                                       <b>Shiped to: </b>{ props.list.guestAdress} <br/>
+                                       <b>Shiped to: </b>{ props.list.address} <br/>
                                    </Typography>
                         </ListItemText>  
 
                     <List>
-                    { productList.map((prod) =>
+                    { productList.map((prod, index) =>
                          {
                              return(
                             <ListItem alignItems="flex-start" 
@@ -78,17 +79,9 @@ const OrderCard = (props) =>{
                                          marginLeft: "auto",
                                          marginRight: "auto"
                                     }}>
-
-                             <ListItemAvatar 
-                                  sx={{
-                                        width: "150px",
-                                        height: "100px",
-                                        display: "flex"
-                                     }}>
-
-                                  <img alt ="device img" src={`data:'base64,${prod.img[0]}`}/>
-
-                             </ListItemAvatar>
+                                <Avatar src={`data:;base64,${prod.img[0]}`}
+                                        alt={`product_photo`}
+                                        sx={{ width: 100, height: 100, margin: "auto", border: '1px solid lightgrey' }} />
 
                                 <ListItem sx={{
                                         display: "block",
@@ -128,7 +121,7 @@ const OrderCard = (props) =>{
                                         color="text.primary"
                                     >
                                         
-                                        <b>Quantity: </b>{prod.quantity}<br/>
+                                        <b>Quantity: </b>{props.list.products[index].quantity}<br/>
                                     </Typography>
                                    
                                    

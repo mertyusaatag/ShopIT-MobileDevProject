@@ -39,7 +39,10 @@ const LogIn = () => {
                 }
                 localStorage.setItem("user", JSON.stringify(user))
                 setUserLogged(true)
-                const cart = []
+                const cart = {
+                    products: [],
+                    total: 0
+                }
                 localStorage.setItem("cart",JSON.stringify(cart))
             })
             .catch(err => {

@@ -1,4 +1,5 @@
 const {  getAllOrders, deleteOrder, getUserOrders, createNewOrder} = require("../services/Order");
+const {  updateProduct, findProductByID } = require("../services/Product")
 const httpStatus = require("http-status");
 const { verifyToken } = require("../utils/helper");
 const fs = require("fs");
@@ -47,22 +48,23 @@ else{
 
 const addOrder = async (req, res) =>
 {
-    const auth = verifyToken(req.headers.authorization)
-    const ord = req.param(req.body)
-    if(auth.accessLevel > process.env.ACCESS_LEVEL_GUEST){
+    try{
         newOrder = await createNewOrder(req.body)
-     
+        for(product of newOrder.products){
+            let prod = await findProductByID(product.productId)
+            prod.quantity = prod.quantity - product.quantity
+            console.log(prod)
+            await updateProduct({ _id: prod._id }, prod)
+        }
         res.status(httpStatus.CREATED).send(newOrder);
+    }catch(error){
+        return res
+        .status(httpStatus.BAD_REQUEST)
+        .send({
+            message: error        
+        });
     }
 
-    else{
-        return res
-            .status(HTTP.UNAUTHORIZED)
-            .send({
-                message:
-                "User is not logged in"         
-            });
-    }
 }
 
 
