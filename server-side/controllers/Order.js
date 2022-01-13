@@ -3,6 +3,7 @@ const {  updateProduct, findProductByID } = require("../services/Product")
 const httpStatus = require("http-status");
 const { verifyToken } = require("../utils/helper");
 const fs = require("fs");
+const mongoose = require('mongoose');
 
 const userOrders = async (req, res) =>{
   const  id = req.params.userId;
@@ -53,7 +54,6 @@ const addOrder = async (req, res) =>
         for(product of newOrder.products){
             let prod = await findProductByID(product.productId)
             prod.quantity = prod.quantity - product.quantity
-            console.log(prod)
             await updateProduct({ _id: prod._id }, prod)
         }
         res.status(httpStatus.CREATED).send(newOrder);

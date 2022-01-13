@@ -8,7 +8,7 @@ const categories = [{
 },
 {
     label: 'Laptops',
-    url: '/category/laptop' 
+    url: '/category/Laptop' 
 },
 {
     label: 'PC Hardware',
@@ -16,27 +16,27 @@ const categories = [{
 },
 {
     label: 'Monitors',
-    url: '/category/monitor' 
+    url: '/category/Monitor' 
 },
 {
     label: 'Keyboards',
-    url: '/category/keyboard' 
+    url: '/category/Keyboard' 
 },
 {
     label: 'Mice',
-    url: '/category/mouse' 
+    url: '/category/Mouse' 
 },
 {
     label: 'Headphones',
-    url: '/category/headphones' 
+    url: '/category/Headphones' 
 },
 {
     label: 'GPUs',
-    url: '/category/gpu' 
+    url: '/category/Gpu' 
 },
 {
     label: 'CPUs',
-    url: '/category/cpu' 
+    url: '/category/Cpu' 
 },
 {
     label: 'RAM',
