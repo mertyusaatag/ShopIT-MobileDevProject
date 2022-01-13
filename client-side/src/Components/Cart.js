@@ -40,7 +40,6 @@ export default function CartDialog() {
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem('cart')));
-    console.log(cart)
   }, [])
 
   useEffect(() => {

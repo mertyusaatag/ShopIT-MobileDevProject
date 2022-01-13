@@ -72,6 +72,7 @@ function Checkout() {
     const [errorMessage, setErrorMessage] = useState('')
     const [errorFlag, setErrorFlag] = useState(false)
     const [successFlag, setSuccessFlag] = useState(false)
+    const [productsFlag, setProductsFlag] = useState(false)
 
     const handleOnClick = (e) => {
         e.preventDefault()
@@ -120,33 +121,55 @@ function Checkout() {
     }
 
     useEffect(() => {
+        window.addEventListener("storage", () => {
+            const localCart = JSON.parse(localStorage.getItem('cart'));
+            if (localCart) setCart(localCart)
+            if (localCart.products.length) {
+                setProductsFlag(true)
+            }else{
+                setProductsFlag(false)
+            }
+        });
+
+        return () => {
+            window.removeEventListener("storage", () => {
+                const localCart = JSON.parse(localStorage.getItem('cart'));
+                if (localCart) setCart(localCart)
+            });
+        };
+    }, []);
+
+    useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('user'));
         if (loggedUser.accessLevel > GUEST_LEVEL) {
-            axios.get(`${SERVER_HOST}/users/getUserByEmail/${loggedUser.email}`, {headers: {authorization: loggedUser.token}})
-            .then(res => {
-                setUserID(res.data._id)
-                setUser(loggedUser)
-                setName(loggedUser.name)
-                setEmail(loggedUser.email)
-            })
-            .catch(err => {
-                console.log(err.response)
-            })
+            axios.get(`${SERVER_HOST}/users/getUserByEmail/${loggedUser.email}`, { headers: { authorization: loggedUser.token } })
+                .then(res => {
+                    setUserID(res.data._id)
+                    setUser(loggedUser)
+                    setName(loggedUser.name)
+                    setEmail(loggedUser.email)
+                })
+                .catch(err => {
+                    console.log(err.response)
+                })
             setUser(loggedUser)
             setName(loggedUser.name)
             setEmail(loggedUser.email)
-        }else{
+        } else {
             setUserID("GUEST")
         }
         const localCart = JSON.parse(localStorage.getItem('cart'));
         if (localCart) {
             setCart(localCart)
             setTotal(localCart.total)
+            if (localCart.products.length) {
+                setProductsFlag(true)
+            }
         }
-        return  () =>{
+        return () => {
             const localOrder = JSON.parse(localStorage.getItem('order'));
-            if(localOrder && localOrder.status !== "unpaid"){
-                if(localOrder.status !== "unpaid"){
+            if (localOrder && localOrder.status !== "unpaid") {
+                if (localOrder.status !== "unpaid") {
                     localStorage.removeItem('order')
                 }
             }
@@ -156,7 +179,7 @@ function Checkout() {
         <div className="Checkout">
             <TopAppBar />
             <Paper style={paperStyle}>
-                {cart.products
+                {productsFlag
                     ? [(user
                         ? <div>
                             <Typography variant="h4">You are logged in as {user.name}</Typography>
@@ -171,7 +194,7 @@ function Checkout() {
                             </Typography>
                         </div>),
                     (<div>
-                        <Divider><Typography variant="h6">Your Order</Typography></Divider>
+                        <Divider><Typography variant="h5">Your Order</Typography></Divider>
                         <CurrentOrderTable /><br />
                         <Divider><Typography variant="h6">Delivery information</Typography></Divider><br />
                         <TextField fullWidth sx={{ m: 1 }} label="Your full name" variant="outlined"
@@ -240,7 +263,7 @@ function Checkout() {
 
                     </div>)
                     ]
-                    : <Typography>Your cart is empty.</Typography>}
+                    : <Typography variant="h4">Your cart is empty.</Typography>}
             </Paper>
         </div>
     );

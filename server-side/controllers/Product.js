@@ -17,12 +17,12 @@ const create = async (req, res) => {
                             message: "Product already exists"
                         });
                 } else {
-                    newProduct = await addProduct(req.body)
-                    if(newProduc.quantity > 0){
-                        newProduct.inStock = true
+                    if(req.body.quantity > 0){
+                        req.body.inStock= true
                     }else{
-                        newProduct.inStock = false
+                        req.body.inStock = false
                     }
+                    newProduct = await addProduct(req.body)
                     res.status(httpStatus.CREATED).send(newProduct);
                 }
             } catch (error) {
