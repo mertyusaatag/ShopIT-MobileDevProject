@@ -18,7 +18,7 @@ import { QuantityPicker } from 'react-qty-picker';
 const slideImages = [asus, intel, corsair, ryzen]
 const ProductPage = () => {
  
-    const [productDetails, setProductDetails] = useState([]);
+    const [productDetails, setProductDetails] = useState(null);
     const {id} = useParams();
     const [quantity_, setQuantity_] = useState()
     const [errorFlag, setErrorFlag] = useState(false)
@@ -38,7 +38,7 @@ const ProductPage = () => {
         //assuming we have an ID field in our item
 
         //look for item in cart array
-        let existingItem = tempCart.products.find(cartItem => cartItem._id == product._id);
+        let existingItem = tempCart.products.find(cartItem => cartItem._id === product._id);
 
         //if item already exists
         if (existingItem) {
@@ -56,33 +56,58 @@ const ProductPage = () => {
         //make cart a string and store in local space
         const stringCart = JSON.stringify(tempCart);
         localStorage.setItem("cart", stringCart)
+
     }
 
     useEffect(() => {
+        const localCart = JSON.parse(localStorage.getItem('cart'));
+        if (localCart) setCart(localCart)
+   
         axios.get(`${SERVER_HOST}/products/getProduct/${id}`)
         .then(res => {
+            console.log(res.data)
             setProductDetails(res.data);
+        })
+        .catch(err => {
+            console.log(err.response.data.message)
         })
 
        
-    })
+    },[id]);
+
+    useEffect(() => {
+        window.addEventListener("storage", () => {
+          const localCart = JSON.parse(localStorage.getItem('cart'));
+          if (localCart) setCart(localCart)
+        });
+    
+        return () => {
+          window.removeEventListener("storage", () => {
+            const localCart = JSON.parse(localStorage.getItem('cart'));
+            if (localCart) setCart(localCart)
+          });
+        };
+      }, []);
+
 
   
     return(
         <div style={{width:"95%", maxWidth: 1900, marginLeft:"auto", marginRight:"auto"}}>
             <TopAppBar/>
                 <h1 style={{marginBottom: 40}}>Product Details</h1>
-                            <div style ={{display: "flex"}}>
+                           {productDetails ?  <div style ={{display: "flex"}}>
                                 <div style={{width:"50%",maxWidth:800, height:600}}>
-                                    <Paper >
-                                        <Carousel height="800px"showArrows={true} showThumbs={true}
+                                <Paper >
+                                        {console.log(productDetails)}
+                                        <Carousel showArrows={true} showThumbs={true}
                                             infiniteLoop={true} autoPlay={false}
-                                            centerMode={true} centerSlidePercentage={370}
+                                            centerMode={true} centerSlidePercentage={70}
                                             stopOnHover={true} transitionTime={1000}
                                             interval={5000} showStatus={false} dynamicHeight={false}>
-                                            {productDetails.img.map((img, index) => (
+                                            {
+                                             productDetails.img.map((pic, index) => (
                                                 <div className="each-fade" key={index}>
-                                                    <img src={`data:;base64,${img}`} alt="slide-img"   />
+                                                    <img src={`data:;base64,${pic}`} alt="slide-img"/>
                                                 </div>
                                             ))}
                                         </Carousel>
@@ -103,6 +128,7 @@ const ProductPage = () => {
                                                                             max={productDetails.quantity}
                                                                             min={1}
                                                                             onChange ={(value)=>{
+                                                                                setQuantity_(value);
                                                                                     if(value === productDetails.quantity)
                                                                                       {
                                                                                          alert("This is maximum quantity you can add to cart " )       
@@ -114,7 +140,7 @@ const ProductPage = () => {
 
                                                         <Paper sx={{width:150,marginLeft:"auto",marginTop:"auto", padding:2}}>
                                                             <Typography sx={{fontSize:25 }}> Price: <b>{productDetails.price}</b>$</Typography>
-                                                            <Button onClick={() => addCart(productDetails)} variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
+                                                            <Button onClick={() => {for(var i=0; i < quantity_; i++){ addCart(productDetails)}}} variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
                                                          </Paper>
 
                                                         
@@ -128,7 +154,7 @@ const ProductPage = () => {
                                                  </div>
                                             </div>
                                 </div>
-         
+                              :   <Typography sx={{fontSize:25 }}> Loading Product</Typography> } 
 
         </div>
     )

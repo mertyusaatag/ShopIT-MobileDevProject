@@ -144,7 +144,7 @@ const CategoryPage = () => {
                                             <img src={`data:;base64,${product.img[0]}`} alt={`product_photo`} style={imageStyle} />
                                             <Typography variant="h6">{product.name}</Typography>
                                             <Typography variant="h6">${product.price}</Typography><br />
-                                            <Button size="small" variant="outlined">See details</Button><br />
+                                            <Button size="small" variant="outlined" component ={Link} to = {`/productDetails/${product._id}`}>See details</Button><br />
                                             <Button disabled={product.inStock ? false : true} size="small"
                                             variant="contained" endIcon={<AddShoppingCartIcon />} onClick={() => addCart(product)}>
                                                 Add to cart
