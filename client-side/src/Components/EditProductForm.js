@@ -93,6 +93,9 @@ const EditProductForm = () => {
                     inStock: true
                 }))
             }
+            const updatedProduct = product
+            updatedProduct.img =[]
+            console.log(updatedProduct)
             axios.put(`${SERVER_HOST}/products/update`, product, { headers: { "authorization": user.token } })
                 .then(res => {
                     if (files.length > 0) {

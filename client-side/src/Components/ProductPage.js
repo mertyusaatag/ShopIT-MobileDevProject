@@ -139,7 +139,7 @@ const ProductPage = () => {
 
                                                         <Paper sx={{width:150,marginLeft:"auto",marginTop:"auto", padding:2}}>
                                                             <Typography sx={{fontSize:25 }}> Price: <b>{productDetails.price}</b>$</Typography>
-                                                            <Button onClick={() => {for(var i=0; i < quantity_; i++){ addCart(productDetails)}}} variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
+                                                            <Button disabled={productDetails.inStock ? false : true} onClick={() => {for(var i=0; i < quantity_; i++){ addCart(productDetails)}}} variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
                                                          </Paper>
 
                                                         
