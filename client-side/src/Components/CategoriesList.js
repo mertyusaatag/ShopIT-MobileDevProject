@@ -7,6 +7,7 @@ const categories = [,
     label: 'Laptops',
     url: '/category/Laptop' 
 },
+
 {
     label: 'PC Hardware',
     url: '/category/PC%20Hardware' 
@@ -41,7 +42,7 @@ const categories = [,
 },
 {
     label: 'Motherboards',
-    url: '/category/motherboard' 
+    url: '/category/Motherboard' 
 },]
 
 const CategoriesList = () => {
