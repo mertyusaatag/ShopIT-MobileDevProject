@@ -22,7 +22,41 @@ const ProductPage = () => {
     const {id} = useParams();
     const [quantity_, setQuantity_] = useState()
     const [errorFlag, setErrorFlag] = useState(false)
+    const [cart, setCart] = useState([])
 
+ const addCart = (product) => {
+        //create a copy of our cart state, avoid overwritting existing state
+
+
+        let tempCart = cart;
+        console.log(tempCart)
+
+        product = {
+            ...product,
+            cartQuantity: 1
+        }
+        //assuming we have an ID field in our item
+
+        //look for item in cart array
+        let existingItem = tempCart.products.find(cartItem => cartItem._id == product._id);
+
+        //if item already exists
+        if (existingItem) {
+            existingItem.cartQuantity++ //update item
+        } else { //if item doesn't exist, simply add it
+            //setCart.push(product)
+            tempCart.products.push(product);
+        }
+
+        tempCart.total = tempCart.total + product.price
+
+        //update app state
+        setCart(tempCart)
+
+        //make cart a string and store in local space
+        const stringCart = JSON.stringify(tempCart);
+        localStorage.setItem("cart", stringCart)
+    }
 
     useEffect(() => {
         axios.get(`${SERVER_HOST}/products/getProduct/${id}`)
@@ -46,9 +80,9 @@ const ProductPage = () => {
                                             centerMode={true} centerSlidePercentage={370}
                                             stopOnHover={true} transitionTime={1000}
                                             interval={5000} showStatus={false} dynamicHeight={false}>
-                                            {slideImages.map((img, index) => (
+                                            {productDetails.img.map((img, index) => (
                                                 <div className="each-fade" key={index}>
-                                                    <img src={img} alt="slide-img"   />
+                                                    <img src={`data:;base64,${img}`} alt="slide-img"   />
                                                 </div>
                                             ))}
                                         </Carousel>
@@ -80,7 +114,7 @@ const ProductPage = () => {
 
                                                         <Paper sx={{width:150,marginLeft:"auto",marginTop:"auto", padding:2}}>
                                                             <Typography sx={{fontSize:25 }}> Price: <b>{productDetails.price}</b>$</Typography>
-                                                            <Button variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
+                                                            <Button onClick={() => addCart(productDetails)} variant="contained" size="large" sx={{marginTop:1}}>Add to cart {<AddShoppingCartIcon />}</Button>
                                                          </Paper>
 
                                                         
