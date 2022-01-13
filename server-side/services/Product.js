@@ -23,6 +23,11 @@ const deleteProductByID = (productID) => {
     })
 }
 
+const getProductByCategory = (Category) => {
+    const response = Product.find({categories : Category.name})
+    return response;
+}
+
 const findProductByName = (productName) => {
     return Product.findOne({ name: productName })
 }
@@ -43,4 +48,8 @@ module.exports = {
     deleteProductByID,
     updateProduct,
     deleteAllProducts,
+<<<<<<< HEAD
+=======
+    getProductByCategory
+>>>>>>> Sprint
 }
