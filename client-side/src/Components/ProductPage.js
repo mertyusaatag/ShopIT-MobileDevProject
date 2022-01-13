@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_HOST } from '../config/global_constants';
 import TopAppBar from './AppBar'
-import mongoose from 'mongoose';
 import { Carousel } from 'react-responsive-carousel';
 import asus from '../Images/asus_ad.jpg'
 import intel from '../Images/intel_ad.jpg'
