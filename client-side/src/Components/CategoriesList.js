@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 const categories = [{
     label: 'All products',
     url: '/category/all' // what ever will work for you here
-<<<<<<< HEAD
 },
 {
     label: 'Laptops',
@@ -48,49 +47,6 @@ const categories = [{
     url: '/category/motherboard' 
 },]
 
-=======
-    },
-    {
-    label: 'Laptops',
-    url: '/category/Laptop'
-    },
-    {
-    label: 'PC Hardware',
-    url: '/category/PC%20Hardware'
-    },
-    {
-    label: 'Monitors',
-    url: '/category/Monitor'
-    },
-    {
-    label: 'Keyboards',
-    url: '/category/Keyboard'
-    },
-    {
-    label: 'Mice',
-    url: '/category/Mouse'
-    },
-    {
-    label: 'Headphones',
-    url: '/category/Headphone'
-    },
-    {
-    label: 'GPUs',
-    url: '/category/Gpu'
-    },
-    {
-    label: 'CPUs',
-    url: '/category/Cpu'
-    },
-    {
-    label: 'RAM',
-    url: '/category/Ram'
-    },
-    {
-    label: 'Motherboards',
-    url: '/category/Motherboard'
-    },]
->>>>>>> Sprint
 const CategoriesList = () => {
     return (
         <div className="CategoriesList" >
@@ -100,13 +56,9 @@ const CategoriesList = () => {
                 </ListSubheader>
             }>
                 {categories.map((category, index)=>(
-<<<<<<< HEAD
                     <ListItemButton key={index} component={Link} to={category.url}>{category.label}</ListItemButton>
                 ))}
-=======
-<ListItemButton key={index} component={Link} to={category.url}>{category.label}</ListItemButton>
-))}
->>>>>>> Sprint
+
             </List>
         </div>
     );

@@ -135,6 +135,8 @@ function Checkout() {
             setUser(loggedUser)
             setName(loggedUser.name)
             setEmail(loggedUser.email)
+        }else{
+            setUserID("GUEST")
         }
         const localCart = JSON.parse(localStorage.getItem('cart'));
         if (localCart) {

@@ -16,16 +16,24 @@ import { Grid, Paper, Button, Avatar } from '@mui/material';
 import CategoriesList from "./CategoriesList"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
+const paperStyle = {
+    padding: "50px 50px",
+    width: 250,
+    margin: "20px auto",
+}
+
+const imageStyle = {
+    display: 'block',
+    margin: 'auto',
+    width: 200,
+    height: 170,
+}
+
 const CategoryPage = () => {
-    const {category} = useParams()
+    const { category } = useParams()
     const [products, setProducts] = useState([])
     const [cart, setCart] = useState([])
-    const imageStyle = {
-        display: 'block',
-        margin: 'auto',
-        width: 50,
-        height: 50,
-    }
+
     const [mobileView, setMobileView] = useState(false)
 
     const updateView = () => {
@@ -33,127 +41,123 @@ const CategoryPage = () => {
         setMobileView(mql.matches)
     };
 
+    
+    const addCart = (product) => {
+        //create a copy of our cart state, avoid overwritting existing state
+
+
+        let tempCart = cart;
+        console.log(tempCart)
+
+        product = {
+            ...product,
+            cartQuantity: 1
+        }
+        //assuming we have an ID field in our item
+
+        //look for item in cart array
+        let existingItem = tempCart.products.find(cartItem => cartItem._id == product._id);
+
+        //if item already exists
+        if (existingItem) {
+            existingItem.cartQuantity++ //update item
+        } else { //if item doesn't exist, simply add it
+            //setCart.push(product)
+            tempCart.products.push(product);
+        }
+
+        tempCart.total = tempCart.total + product.price
+
+        //update app state
+        setCart(tempCart)
+
+        //make cart a string and store in local space
+        const stringCart = JSON.stringify(tempCart);
+        localStorage.setItem("cart", stringCart)
+    }
+
     useEffect(() => {
         window.addEventListener("resize", updateView);
         return () => window.removeEventListener("resize", updateView);
     }, []);
-    const addCart= (product) => {
-        //create a copy of our cart state, avoid overwritting existing state
-        
-  
-        let tempCart = [...cart];
-        console.log(tempCart)
-  
-  product = {
-    ...product,
-    cartQuantity:1
-  }
-  //assuming we have an ID field in our item
-  
-  //look for item in cart array
-  let existingItem = tempCart.find(cartItem => cartItem._id == product._id);
-  
-  //if item already exists
-  if (existingItem) {
-    existingItem.cartQuantity++ //update item
-  } else { //if item doesn't exist, simply add it
-    //setCart.push(product)
-    tempCart.push(product);
+
+    useEffect(() => {
+        window.addEventListener("storage", () => {
+          const localCart = JSON.parse(localStorage.getItem('cart'));
+          if (localCart) setCart(localCart)
+        });
     
-  }
-  
-   //update app state
-   setCart(tempCart)
-  
-   //make cart a string and store in local space
-   const stringCart = JSON.stringify(tempCart);
-   localStorage.setItem("cart", stringCart)
-   tempCart = []
-   window.location.reload();
-    }
-    
-    
+        return () => {
+          window.removeEventListener("storage", () => {
+            const localCart = JSON.parse(localStorage.getItem('cart'));
+            if (localCart) setCart(localCart)
+          });
+        };
+      }, []);
+
+
     useEffect(() => {
         const localCart = JSON.parse(localStorage.getItem('cart'));
         if (localCart) setCart(localCart)
-        if(category==="all")
-        {
+        if (category === "all") {
             axios.get(`${SERVER_HOST}/products/getAllProducts`)
-            .then(res => {
-                setProducts(res.data)
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err.response.data.message)
-            })
+                .then(res => {
+                    setProducts(res.data)
+                })
+                .catch(err => {
+                    console.log(err.response.data.message)
+                })
         }
-        else{
-        axios.get(`${SERVER_HOST}/products/productsByCategory/${category}`)
-            .then(res => {
-                setProducts(res.data)
-                console.log(res.data)
-                
-            })
-            .catch(err => {
-                console.log(err.response.data.message)
-            })
+        else {
+            axios.get(`${SERVER_HOST}/products/productsByCategory/${category}`)
+                .then(res => {
+                    setProducts(res.data)
+
+                })
+                .catch(err => {
+                    console.log(err.response.data.message)
+                })
         }
     }, [category])
 
     return (
         <div className="CategoryPage" >
-            <TopAppBar/>
-            <h1>Category {category}</h1>
-            
-            <Grid container spacing={2} direction="col">
+            <TopAppBar />
+
+            <Grid container spacing={3} direction="row" m="auto" alignItems="stretch" justifyContent="center">
                 {!mobileView
                     ?
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <Paper >
                             <CategoriesList />
                         </Paper>
                     </Grid>
                     : ""}
-           <Container sx={{ py: 8 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid container spacing={2}>
-                    {products.map((row) => (
-                        <Grid item xs={6} md={4}key={row}>
-                         <Card
-                           sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                         >
-                             {row.img.map((photo) => ( 
-                              <CardMedia key={row._id}
-                              component="img"
-                              sx={{
-                                // 16:9
-                                pt: '56.25%',
-                              }}
-                              image={`data:;base64,${photo}`}
-                               alt={`product_photo`}
-                              
-                            />))}
-                          
 
-                           <CardContent sx={{ flexGrow: 1 }}>
-                             <Typography gutterBottom variant="h5" component="h2">
-                               {row.name}
-                             </Typography>
-                           </CardContent>
-                           <CardActions>
-                             <div>
-                            
-                             <Button size="small"  onClick={()=>addCart(row)}>{`${row.price}$ Add to Cart`}</Button>
-                             <Button size="small">Go Details Page</Button>
-                            </div>
-                           </CardActions>
-                         </Card>
-                       </Grid>
-                    ))}
+                <Grid item xs>
+                    <Grid container item spacing={3} alignItems="stretch" justifyContent="center">
+                        {products
+                            ? products.map(product => (
+                                <Grid item>
+                                    <Paper style={paperStyle}>
+                                        <Grid container spacing={3} direction="column" m="auto" alignItems="stretch" justifyContent="center">
+                                            <img src={`data:;base64,${product.img[0]}`} alt={`product_photo`} style={imageStyle} />
+                                            <Typography variant="h6">{product.name}</Typography>
+                                            <Typography variant="h6">${product.price}</Typography><br />
+                                            <Button size="small" variant="outlined">See details</Button><br />
+                                            <Button disabled={product.inStock ? false : true} size="small"
+                                            variant="contained" endIcon={<AddShoppingCartIcon />} onClick={() => addCart(product)}>
+                                                Add to cart
+                                            </Button>
+                                        </Grid>
+                                    </Paper>
+                                </Grid>
+                            ))
+                            : <Typography variant="h4">Loading products...</Typography>}
+                    </Grid>
                 </Grid>
-                </Container>
-                </Grid>
-                
+            </Grid>
+
         </div>
     );
 }
