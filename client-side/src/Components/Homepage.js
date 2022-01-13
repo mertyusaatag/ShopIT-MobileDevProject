@@ -33,8 +33,6 @@ const chosenCategories = [{
 }]
 
 const Homepage = () => {
-<<<<<<< HEAD
-=======
 // <<<<<<< HEAD
 //     const [productList,setProductList] = useState([])
 //     const [cart, setCart] = useState([])
@@ -141,7 +139,6 @@ const Homepage = () => {
           //       </Grid>
           //       </Container>
 //=======
->>>>>>> Sprint
     const [user, setUser] = useState(null)
     const [mobileView, setMobileView] = useState(false)
     const updateView = () => {
