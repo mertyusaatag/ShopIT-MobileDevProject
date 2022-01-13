@@ -33,7 +33,7 @@ const login = (req, res) => {
         .status(httpStatus.NOT_FOUND)
         .send({
           message:
-            "Account Not Found. Please check your account details Or Register.",
+            "Incorrect username or password.",
         });
     }
 

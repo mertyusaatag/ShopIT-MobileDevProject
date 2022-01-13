@@ -202,7 +202,7 @@ function Checkout() {
                         </div>),
                     (<div>
                         <Divider><Typography variant="h5">Your Order</Typography></Divider>
-                        <CurrentOrderTable /><br />
+                        <CurrentOrderTable deleteButton={false}/><br />
                         <Divider><Typography variant="h6">Delivery information</Typography></Divider><br />
                         <TextField fullWidth sx={{ m: 1 }} label="Your full name" variant="outlined"
                             required

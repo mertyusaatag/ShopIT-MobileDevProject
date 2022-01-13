@@ -75,7 +75,7 @@ export default function CartDialog() {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TableContainer component={Paper} sx={{ maxHeight: 440 }}>
-              <CurrentOrderTable />
+              <CurrentOrderTable deleteButton={true}/>
             </TableContainer>
           </DialogContentText>
         </DialogContent>
