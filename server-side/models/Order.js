@@ -21,7 +21,10 @@ const OrderSchema = new mongoose.Schema(
                 default:1
             }}
         ],
-        guestAdress : {
+        address : {
+            type:String,
+        },
+        phoneNumber: {
             type:String,
         },
         amount : {

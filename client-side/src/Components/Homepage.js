@@ -13,7 +13,7 @@ import ryzen from '../Images/ryzen_ad.jpg'
 import cpu from '../Images/cpu_small.jpg'
 import gpu from '../Images/gpu_small.jpg'
 import motherboard from '../Images/motherboard_small.jpg'
-import { GUEST_LEVEL, ADMIN_LEVEL } from '../config/global_constants';
+import { GUEST_LEVEL, ADMIN_LEVEL, SERVER_HOST } from '../config/global_constants';
 
 const slideImages = [asus, intel, corsair, ryzen]
 const chosenCategories = [{
@@ -33,6 +33,8 @@ const chosenCategories = [{
 }]
 
 const Homepage = () => {
+<<<<<<< HEAD
+=======
 // <<<<<<< HEAD
 //     const [productList,setProductList] = useState([])
 //     const [cart, setCart] = useState([])
@@ -139,9 +141,9 @@ const Homepage = () => {
           //       </Grid>
           //       </Container>
 //=======
+>>>>>>> Sprint
     const [user, setUser] = useState(null)
     const [mobileView, setMobileView] = useState(false)
-
     const updateView = () => {
         const mql = window.matchMedia('(max-width: 850px)');
         setMobileView(mql.matches)
@@ -151,6 +153,7 @@ const Homepage = () => {
         window.addEventListener("resize", updateView);
         return () => window.removeEventListener("resize", updateView);
     }, []);
+
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -201,7 +204,7 @@ const Homepage = () => {
                                     </Paper>
                                     : <Paper style={{ padding: "10px 50px", height: "100%" }}>
                                         <Typography variant="h6">Welcome back {user.name}!</Typography><br />
-                                        <Grid container spacing = {2} alignItems="stretch" justifyContent="center">
+                                        <Grid container spacing={2} alignItems="stretch" justifyContent="center">
                                             <Grid item>
                                                 <Button component={Link} to="/profile" variant="contained"  >Visit your profile</Button>
                                             </Grid>
@@ -209,12 +212,12 @@ const Homepage = () => {
                                                 <Button component={Link} to="/userOrders" variant="contained"  >View your orders</Button>
                                             </Grid>
                                             {user.accessLevel === ADMIN_LEVEL
-                                            ? <Grid item>
-                                                <Button component={Link} to="/admin" variant="contained" color="error"  >
-                                                    Go to admin panel
-                                                </Button>
+                                                ? <Grid item>
+                                                    <Button component={Link} to="/admin" variant="contained" color="error"  >
+                                                        Go to admin panel
+                                                    </Button>
                                                 </Grid>
-                                            : ""}
+                                                : ""}
                                         </Grid>
                                     </Paper>}
                             </Grid>
@@ -239,7 +242,6 @@ const Homepage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-{/* >>>>>>> 461a267c15ab0b46b7a22c7a7b474cd51cc37962 */}
         </div>
     );
 }

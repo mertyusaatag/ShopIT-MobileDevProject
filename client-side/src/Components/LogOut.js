@@ -12,7 +12,10 @@ const LogOut = () => {
             accessLevel: 0
         }
         localStorage.setItem("user", JSON.stringify(user))
-        const cart = []
+        const cart = {
+            products: [],
+            total: 0
+        }
         localStorage.setItem("cart",JSON.stringify(cart))
     }, [])
 
