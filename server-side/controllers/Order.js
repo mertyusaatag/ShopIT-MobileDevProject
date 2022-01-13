@@ -6,7 +6,7 @@ const fs = require("fs");
 const mongoose = require('mongoose');
 
 const userOrders = async (req, res) =>{
-  const  id = req.param(`userId`)
+  const  id = req.params.userId;
   
 const auth = verifyToken(req.headers.authorization)
 

@@ -54,15 +54,6 @@ const Orders = () => {
 
             }
 
-        //     else{
-        //         content =  <Typography  sx={{fontSize: 35,marginLeft:"auto",marginRight:"auto"}}          
-        //         component="span"
-        //         variant="body2"
-        //          color="text.primary" >
-               
-        //        <b>You don't have any order</b>
-        //    </Typography>
-        //     }
 
     return(
         <div className="Orders">

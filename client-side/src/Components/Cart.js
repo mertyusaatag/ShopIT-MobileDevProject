@@ -81,7 +81,7 @@ export default function CartDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Go Back</Button>
-          {cart.products
+          {cart
             ?
             <Button onClick={handleCheckout} autoFocus>
               Checkout
