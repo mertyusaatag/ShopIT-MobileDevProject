@@ -2,10 +2,7 @@ import React from 'react'
 import { List, ListSubheader, ListItemButton } from '@mui/material'
 import { Link } from 'react-router-dom'
 
-const categories = [{
-    label: 'All products',
-    url: '/category/all' // what ever will work for you here
-},
+const categories = [,
 {
     label: 'Laptops',
     url: '/category/Laptop' 
@@ -32,15 +29,15 @@ const categories = [{
 },
 {
     label: 'GPUs',
-    url: '/category/Gpu' 
+    url: '/category/GPU' 
 },
 {
     label: 'CPUs',
-    url: '/category/Cpu' 
+    url: '/category/CPU' 
 },
 {
     label: 'RAM',
-    url: '/category/ram' 
+    url: '/category/RAM' 
 },
 {
     label: 'Motherboards',
