@@ -1,4 +1,4 @@
-const { addProduct, listAllProducts, findProductByID, deleteProductByID, findProductByName, updateProduct, deleteAllProducts } = require("../services/Product");
+const { getProductByCategory,addProduct, listAllProducts, findProductByID, deleteProductByID, findProductByName, updateProduct, deleteAllProducts } = require("../services/Product");
 const httpStatus = require("http-status");
 const { verifyToken } = require("../utils/helper");
 const fs = require("fs");
@@ -38,6 +38,26 @@ const create = async (req, res) => {
                 message:
                     "User is not logged in",
             });
+    }
+}
+
+const getProductsByCategory= async (req,res) => 
+{
+    try {
+        const products = await getProductByCategory(req.params);
+        const productImgs = products.map(product => {
+            let files = []
+            product.img.map((img) => {
+                file = fs.readFileSync(`./uploads/products/${img}`, `base64`)
+                files.push(file)
+            })
+            product.img = files
+            return product
+        })
+        res.status(httpStatus.CREATED).send(productImgs);
+        
+    } catch (error) {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error)
     }
 }
 
@@ -256,5 +276,6 @@ module.exports = {
     addImages,
     deleteAll,
     clearImages,
-    update
+    update,
+    getProductsByCategory
 }
